@@ -1,8 +1,10 @@
-package com.example.Gamesite.model;
+package com.example.Gamesite.repository;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
+
+import com.example.Gamesite.model.User;
 
 public interface UserRepository extends CrudRepository<User, Long>{
 	//find user with the given identifier

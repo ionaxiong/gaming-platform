@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.Gamesite.model.User;
-import com.example.Gamesite.model.UserRepository;
+import com.example.Gamesite.repository.UserRepository;
 
 /**
  * This class is used by spring security to authenticate and authorize user

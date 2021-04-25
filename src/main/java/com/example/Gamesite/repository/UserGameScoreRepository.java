@@ -1,8 +1,10 @@
-package com.example.Gamesite.model;
+package com.example.Gamesite.repository;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
+
+import com.example.Gamesite.model.UserGameScore;
 
 public interface UserGameScoreRepository extends CrudRepository<UserGameScore, Integer>{
 	//return the users with the given identifiers

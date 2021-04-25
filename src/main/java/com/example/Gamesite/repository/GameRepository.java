@@ -1,8 +1,10 @@
-package com.example.Gamesite.model;
+package com.example.Gamesite.repository;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
+
+import com.example.Gamesite.model.Game;
 
 public interface GameRepository extends CrudRepository <Game, Long>{
 	//return game with the given identifier or all

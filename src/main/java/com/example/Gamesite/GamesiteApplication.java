@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.Gamesite.model.Game;
-import com.example.Gamesite.model.GameRepository;
 import com.example.Gamesite.model.User;
 import com.example.Gamesite.model.UserGameScore;
-import com.example.Gamesite.model.UserGameScoreRepository;
-import com.example.Gamesite.model.UserRepository;
+import com.example.Gamesite.repository.GameRepository;
+import com.example.Gamesite.repository.UserGameScoreRepository;
+import com.example.Gamesite.repository.UserRepository;
 
 @SpringBootApplication
 public class GamesiteApplication {
