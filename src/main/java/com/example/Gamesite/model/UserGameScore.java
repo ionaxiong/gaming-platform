@@ -5,9 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 
 @Entity
 public class UserGameScore {
@@ -15,13 +15,15 @@ public class UserGameScore {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long userGameScoreId;
 	
-	@OneToOne(cascade=CascadeType.ALL,mappedBy="Game")
-	@JsonIgnore
-	private Long gameId;
-	
-	@OneToOne(cascade=CascadeType.ALL,mappedBy="User")
-	@JsonIgnore
-	private Long userId;
+	@ManyToOne(cascade = {CascadeType.MERGE})
+	@MapsId("gameId")
+	@JoinColumn(name="gameId")
+	private Game gameId;
+
+	@ManyToOne(cascade = {CascadeType.MERGE})
+	@MapsId("userId")
+	@JoinColumn(name="userId")
+	private User userId;
 	
 	private Integer score;
 	
@@ -29,9 +31,8 @@ public class UserGameScore {
 		
 	}
 
-	public UserGameScore(Long userGameScoreId, Long gameId, Long userId, Integer score) {
+	public UserGameScore(Game gameId, User userId, Integer score) {
 		super();
-		this.userGameScoreId = userGameScoreId;
 		this.gameId = gameId;
 		this.userId = userId;
 		this.score = score;
@@ -41,23 +42,19 @@ public class UserGameScore {
 		return userGameScoreId;
 	}
 
-	public void setUserGameScoreId(Long userGameScoreId) {
-		this.userGameScoreId = userGameScoreId;
-	}
-
-	public Long getGameId() {
+	public Game getGameId() {
 		return gameId;
 	}
 
-	public void setGameId(Long gameId) {
+	public void setGameId(Game gameId) {
 		this.gameId = gameId;
 	}
 
-	public Long getUserId() {
+	public User getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(User userId) {
 		this.userId = userId;
 	}
 
