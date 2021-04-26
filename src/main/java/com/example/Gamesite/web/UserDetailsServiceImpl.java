@@ -14,11 +14,11 @@ import com.example.Gamesite.repository.UserRepository;
  * This class is used by spring security to authenticate and authorize user
  **/
 @Service
-public class UserDetailServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 	private final UserRepository repository;
 
 	@Autowired
-	public UserDetailServiceImpl(UserRepository userRepository) {
+	public UserDetailsServiceImpl(UserRepository userRepository) {
 		this.repository = userRepository;
 	}
 
