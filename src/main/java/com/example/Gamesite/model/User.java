@@ -12,10 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Table(name="Profile")
+@Table(name="profile")
 @Entity
 public class User {
     @Id
@@ -27,10 +28,13 @@ public class User {
     private String username;
 
     @Column(name = "password", nullable = false)
-    private String passwordHash;
+    private String password;
     
     @Column(name = "email", nullable = false)
     private String email;
+    
+    @Transient
+    private String passwordConfirm;
     
     @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "userId")
     @JsonIgnore
@@ -40,10 +44,10 @@ public class User {
     public User() {
     }
     
-	public User(String username, String passwordHash, String email, List<Game> savedGames) {
+	public User(String username, String password, String email, List<Game> savedGames) {
 		super();
 		this.username = username;
-		this.passwordHash = passwordHash;
+		this.password = password;
 		this.email = email;
 		this.savedGames = savedGames;
 	}
@@ -60,12 +64,20 @@ public class User {
 		this.username = username;
 	}
 
-	public String getPasswordHash() {
-		return passwordHash;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setPasswordHash(String passwordHash) {
-		this.passwordHash = passwordHash;
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public String getPasswordConfirm() {
+		return passwordConfirm;
+	}
+
+	public void setPasswordConfirm(String passwordConfirm) {
+		this.passwordConfirm = passwordConfirm;
 	}
 
 	public String getEmail() {
@@ -86,7 +98,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", username=" + username + ", passwordHash=" + passwordHash + ", email="
+		return "User [userId=" + userId + ", username=" + username + ", passwordHash=" + password + ", email="
 				+ email + ", savedGames=" + savedGames + "]";
 	}
     
