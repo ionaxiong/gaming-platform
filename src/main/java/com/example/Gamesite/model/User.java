@@ -15,6 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,7 +34,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
     
-//    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false)
+    @NotEmpty(message = "{email.notempty}")
+    @Email(message = "Email should be valid")
     private String email;
     
     @Transient
