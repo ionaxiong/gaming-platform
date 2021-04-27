@@ -1,17 +1,9 @@
 package com.example.Gamesite.repository;
 
 import java.util.List;
-
-import org.springframework.data.repository.CrudRepository;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.Gamesite.model.UserGameScore;
 
-public interface UserGameScoreRepository extends CrudRepository<UserGameScore, Integer>{
-	//return the users with the given identifiers
+public interface UserGameScoreRepository extends JpaRepository<UserGameScore, Integer>{
 	List<UserGameScore> findByGameId(Long gameId);
-
-	//save score for a user for a game
-//	UserGameScore save(String gameId, String userId, Integer score);
-//	void save(String gameId, String userId, int score);
-	
 }

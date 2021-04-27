@@ -7,13 +7,13 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.example.Gamesite.model.User;
-import com.example.Gamesite.repository.UserRepository;
+import com.example.Gamesite.service.UserService;
 
 @Component
 public class UserValidator implements Validator {
 	@Autowired
-	private UserRepository userRepository;
-
+	private UserService userService;
+	
 	@Override
 	public boolean supports(Class<?> aClass) {
 		return User.class.equals(aClass);
@@ -28,7 +28,7 @@ public class UserValidator implements Validator {
 			errors.rejectValue("username", "Size.userForm.username");
 		}
 
-		if (userRepository.findByUsername(user.getUsername()) != null) {
+		if (userService.findByUsername(user.getUsername()) != null) {
 			errors.rejectValue("username", "Duplicate.userForm.username");
 		}
 

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.Gamesite.model.User;
 import com.example.Gamesite.repository.GameRepository;
 import com.example.Gamesite.repository.UserGameScoreRepository;
-import com.example.Gamesite.repository.UserRepository;
 import com.example.Gamesite.service.SecurityService;
+import com.example.Gamesite.service.UserService;
 
 @Controller
 public class GameSiteController {
@@ -21,10 +21,10 @@ public class GameSiteController {
 	private GameRepository grepository;
 	
 	@Autowired
-	private UserRepository urepository;
+	private UserGameScoreRepository srepository;
 	
 	@Autowired
-	private UserGameScoreRepository srepository;
+	private UserService userService;
 	
 	@Autowired
 	private SecurityService securityService;
@@ -50,17 +50,17 @@ public class GameSiteController {
 			return "registration";
 		}
 		
-		urepository.save(userForm);
+		userService.save(userForm);
 		
 		securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
 		
-		return "redirect:/games";
+		return "redirect:/gamelist";
 	}
 	
 	@GetMapping("/login")
 	public String login(Model model, String error, String logout) {
 		if (securityService.isAuthenticated()) {
-			return "redirect:/games";
+			return "redirect:/gamelist";
 		}
 		
 		if (error != null)
@@ -75,6 +75,6 @@ public class GameSiteController {
 	@RequestMapping(value= {"/", "/games"})
 	public String games(Model model) {
 		model.addAttribute("games", grepository.findAll());
-		return "games";
+		return "gamelist";
 	}
 }
