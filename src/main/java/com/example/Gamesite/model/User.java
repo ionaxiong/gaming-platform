@@ -2,6 +2,7 @@ package com.example.Gamesite.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -36,7 +38,18 @@ public class User {
     @Transient
     private String passwordConfirm;
     
-    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "userId")
+    @ManyToMany
+    private Set<Role> roles;
+    
+    public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "userId")
     @JsonIgnore
     @Column(name = "savedGames", nullable = true)
     private List<Game> savedGames = new ArrayList<>();
@@ -98,8 +111,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", username=" + username + ", passwordHash=" + password + ", email="
-				+ email + ", savedGames=" + savedGames + "]";
+		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
+				+ ", passwordConfirm=" + passwordConfirm + ", roles=" + roles + ", savedGames=" + savedGames + "]";
 	}
-    
 }
