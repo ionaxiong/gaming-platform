@@ -1,6 +1,9 @@
 package com.example.Gamesite.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.example.Gamesite.model.User;
 import com.example.Gamesite.repository.GameRepository;
 import com.example.Gamesite.repository.UserGameScoreRepository;
+import com.example.Gamesite.repository.UserRepository;
 import com.example.Gamesite.service.SecurityService;
 import com.example.Gamesite.service.UserService;
 
@@ -24,6 +28,9 @@ public class GameSiteController {
 
 	@Autowired
 	private UserGameScoreRepository srepository;
+	
+	@Autowired
+	private UserRepository urepository;
 
 	@Autowired
 	private UserService userService;
@@ -85,5 +92,17 @@ public class GameSiteController {
 	public String play(@PathVariable("id") Long gameId, Model model) {
 		model.addAttribute("game", grepository.findByGameId(gameId));
 		return "play";
+	}
+	
+	@RequestMapping(value="/profile", method=RequestMethod.GET)
+	public String profile(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
+		model.addAttribute("user", urepository.findByUsername(username));
+		return "profile";
+	}
+	
+	@RequestMapping(value="/save", method=RequestMethod.POST)
+	public String save(User user) {
+		urepository.save(user);
+		return "redirect:/";
 	}
 }

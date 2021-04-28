@@ -23,9 +23,9 @@
 				
 				<!-- add favourites, user own profile link to nav bar -->
 				
-					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" href="/">Favourites</a></li>
 					<li sec:authorize="isAnonymous()" class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" sec:authentication="name" href="/"></a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" sec:authentication="name" href="/profile"></a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" href="/">Favourites</a></li>
 					<li sec:authorize="isAuthenticated()" class="nav-item"><a onclick="document.forms['logoutForm'].submit()" class="nav-link">Logout</a></li>
 					<li sec:authorize="isAnonymous()" class="nav-item"><a class="nav-link" href="/registration">Sign Up</a></li>
 				</ul>
@@ -51,10 +51,7 @@
 						<p class="card-text">
 							<small class="text-muted">Last updated 3 mins ago</small>
 						</p>
-						
-						<!-- change th:href="${game.game_url} to iframe html page -->
 						<a th:href="@{/play/{id}(id=${game.gameId})}" class="btn btn-primary">Play Now</a>
-						
 					</div>
 				</div>
 			</div>

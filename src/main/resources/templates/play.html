@@ -7,18 +7,44 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
 	integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
 	crossorigin="anonymous">
-<link href="/css/main.css" rel="stylesheet">
 </head>
 
 <body>
-	<div class="container">
-		<div id="gameWrapper">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+		<div class="container">
+			<a class="navbar-brand" href="/">GameSite</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarResponsive" aria-controls="navbarResponsive"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto">
+				
+				<!-- add favourites, user own profile link to nav bar -->
+				
+					<li sec:authorize="isAnonymous()" class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" sec:authentication="name" href="/"></a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" href="/">Favourites</a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a onclick="document.forms['logoutForm'].submit()" class="nav-link">Logout</a></li>
+					<li sec:authorize="isAnonymous()" class="nav-item"><a class="nav-link" href="/registration">Sign Up</a></li>
+				</ul>
+				<form id="logoutForm" method="POST" th:action="@{/logout}">
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+				</form>
+			</div>
+		</div>
+	</nav>
+	
+	<div class="container p-3">
+		<div style="height: calc(100vh - 100px)" id="gameWrapper">
 			<iframe id="gameIframe" th:src="${game.game_url}"
 				style="height: 100%; width: 100%; border: 2px solid gray; border-radius: 5px">
 			</iframe>
 		</div>
 	</div>
-
+ 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
 		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
 		crossorigin="anonymous"></script>

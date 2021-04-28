@@ -31,14 +31,18 @@ public class GamesiteApplication {
 		return(args) -> {
 			log.info("save game, user, and score");
 			
-			urepository.deleteAll();
+//			urepository.deleteAll();
 			
 			BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 			String userPassword = bcrypt.encode("user");
 			User user1 = new User("user", userPassword, "user@user.com", null);
 			urepository.save(user1);
 			
-			ArrayList<Game> savedgame = new ArrayList<>();
+			String adminPassword = bcrypt.encode("admin");
+			User admin = new User("admin", adminPassword, "admin@admin.com", null);
+			urepository.save(admin);
+			
+//			ArrayList<Game> savedgame = new ArrayList<>();
 			Game game1 = new Game("2048", "http://2048-iframe.s3.eu-central-1.amazonaws.com/index.html", "https://cdn.elgoog.im/2048/2048-game.png", "Puzzle", "2048 is a single-player sliding tile puzzle video game. The objective of the game is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.", urepository.findByUsername("user"));
 			grepository.save(game1);
 			
