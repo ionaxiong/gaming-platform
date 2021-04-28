@@ -13,7 +13,7 @@
 <body>
 	<div class="container">
 		<div id="gameWrapper">
-			<iframe id="gameIframe" src="{{ game.game_url }}"
+			<iframe id="gameIframe" th:src="${game.game_url}"
 				style="height: 100%; width: 100%; border: 2px solid gray; border-radius: 5px">
 			</iframe>
 		</div>

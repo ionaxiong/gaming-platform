@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -27,6 +28,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+			.csrf().disable()
+			.headers().addHeaderWriter(new StaticHeadersWriter(
+			        "X-Content-Security-Policy",
+			        "frame-ancestors self *"))
+			.and()
+			.headers().addHeaderWriter(new StaticHeadersWriter(
+			        "Content-Security-Policy",
+			        "frame-ancestors self *"))
+			.and()
 			.authorizeRequests()
 				.antMatchers("/css/**", "/js/**", "/registration", "/gamelist/**", "/play/**").permitAll()
 				.anyRequest().authenticated()
