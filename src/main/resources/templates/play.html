@@ -2,35 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8">
-<title>Login</title>
+<title>Play</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
 	integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
 	crossorigin="anonymous">
 <link href="/css/main.css" rel="stylesheet">
-
 </head>
 
-<body class="login-container">
+<body>
 	<div class="container">
-		<form class="form-signin" method="POST" th:action="@{/login}">
-			<h2 class="form-heading">Log in</h2>
-
-			<div class="form-group">
-				<span th:text="${message}"></span> <input name="username"
-					type="text" class="form-control" placeholder="Username"
-					autofocus="true" /> <input name="password" type="password"
-					class="form-control" placeholder="Password" /> <span
-					class="has-error" th:text="${error}"></span> <input type="hidden"
-					name="${_csrf.parameterName}" value="${_csrf.token}" />
-
-				<button class="btn btn-lg btn-primary btn-block" type="submit">Log
-					In</button>
-				<h5 class="text-center mt-2">
-					<a href="/registration">Create an account</a>
-				</h5>
-			</div>
-		</form>
+		<div id="gameWrapper">
+			<iframe id="gameIframe" src="{{ game.game_url }}"
+				style="height: 100%; width: 100%; border: 2px solid gray; border-radius: 5px">
+			</iframe>
+		</div>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

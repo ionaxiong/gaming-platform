@@ -7,10 +7,9 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+<link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-
-	<!-- Navigation -->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
 		<div class="container">
 			<a class="navbar-brand" href="/">GameSite</a>
@@ -21,46 +20,56 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ml-auto">
-					<!-- <li class="nav-item active"><a class="nav-link"
-						href="/gamelist">Home <span class="sr-only">(current)</span>
-					</a></li> -->
-					<li class="nav-item"><a class="nav-link" href="/gamelist">Play</a></li>
-					<li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-					<li class="nav-item"><a class="nav-link" href="/registration">Sign
-							Up</a></li>
+				
+				<!-- add favourites, user own profile link to nav bar -->
+				
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" href="/">Favourites</a></li>
+					<li sec:authorize="isAnonymous()" class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" sec:authentication="name" href="/"></a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a onclick="document.forms['logoutForm'].submit()" class="nav-link">Logout</a></li>
+					<li sec:authorize="isAnonymous()" class="nav-item"><a class="nav-link" href="/registration">Sign Up</a></li>
 				</ul>
+				<form id="logoutForm" method="POST" th:action="@{/logout}">
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+				</form>
 			</div>
 		</div>
 	</nav>
 
 	<div class="container p-3">
-		<div class="card-deck">
-			<div class="card" th:each="game: ${games}">
-				<img style="max-height: 200px; object-fit: cover;"
-					class="card-img-top" th:src="${game.image_url}" alt="Game image">
-				<div class="card-body">
-					<h5 class="card-title" th:text="${game.name}"></h5>
-					<p class="card-text" th:text="${game.description}"></p>
-				</div>
-				<div class="card-footer">
-					<p class="card-text">
-						<small class="text-muted">Last updated 3 mins ago</small>
-					</p>
-					<a th:href="${game.game_url}" class="btn btn-primary">Play Now</a>
+		<div class="row">
+			<div class="col-md-4 col-xs-6 pb-3" th:each="game: ${games}">
+				<div class="card">
+					<img style="max-height: 200px; object-fit: cover;"
+						class="card-img-top" th:src="${game.image_url}" alt="Game image">
+					<div class="card-body">
+						<h5 class="card-title" th:text="${game.name}"></h5>
+						<p class="card-text" th:text="${game.description}"></p>
+					</div>
+					<div class="card-footer">
+						<p class="card-text">
+							<small class="text-muted">Last updated 3 mins ago</small>
+						</p>
+						
+						<!-- change th:href="${game.game_url} to iframe html page -->
+						<a th:href="@{/play/{id}(id=${game.gameId})}" class="btn btn-primary">Play Now</a>
+						
+					</div>
 				</div>
 			</div>
 		</div>
-
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-			crossorigin="anonymous"></script>
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-			crossorigin="anonymous"></script>
-		<script
-			src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-			crossorigin="anonymous"></script>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
 </body>
 </html>

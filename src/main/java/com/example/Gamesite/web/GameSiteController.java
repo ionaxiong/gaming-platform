@@ -6,8 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.Gamesite.model.User;
 import com.example.Gamesite.repository.GameRepository;
@@ -77,5 +79,11 @@ public class GameSiteController {
 	public String games(Model model) {
 		model.addAttribute("games", grepository.findAll());
 		return "gamelist";
+	}
+	
+	@RequestMapping(value="/play/{id}", method=RequestMethod.GET)
+	public String play(@PathVariable("id") Long gameId, Model model) {
+		model.addAttribute("game", grepository.findByGameId(gameId));
+		return "play";
 	}
 }
