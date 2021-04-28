@@ -3,13 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <title>GameSite</title>
-
-<!-- <link th:rel="stylesheet"
-	th:href="@{assets/bootstrap-slider/css/bootstrap-slider.css}" /> -->
-<!-- <link th:rel="stylesheet"
-	th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} " />
-<link th:rel="stylesheet"
-	th:href="@{webjars/font-awesome/5.11.2/css/all.css} " /> -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -48,6 +41,8 @@
 				<div class="card-body">
 					<h5 class="card-title" th:text="${game.name}"></h5>
 					<p class="card-text" th:text="${game.description}"></p>
+				</div>
+				<div class="card-footer">
 					<p class="card-text">
 						<small class="text-muted">Last updated 3 mins ago</small>
 					</p>
@@ -56,106 +51,16 @@
 			</div>
 		</div>
 
-		<!-- <div class="card">
-				<img class="card-img-top" src="https://cdn.elgoog.im/2048/2048-game.png" alt="Card image cap">
-				<div class="card-body">
-					<h5 class="card-title">2048</h5>
-					<p class="card-text">This is a editing problem here, need to refresh the page for getting the result i dont know  </p>
-					<p class="card-text">
-						<small class="text-muted">Last updated 3 mins ago</small>
-					</p>
-				</div>
-			</div>
-			
-			for each game
-			<div class="card">
-				<img style="max-height: 250px; object-fit: cover;" class="card-img-top" src="https://images-eu.ssl-images-amazon.com/images/I/61JS%2BhWFGnL.png" alt="Card image cap">
-				<div class="card-body">
-					<h5 class="card-title">Clickermania</h5>
-					<p class="card-text">This card has supporting text below as a
-						natural lead-in to additional content.</p>
-					<p class="card-text">
-						<small class="text-muted">Last updated 3 mins ago</small>
-					</p>
-				</div>
-			</div>
-			end for each 
-			
-			<div class="card">
-				<img class="card-img-top" src="https://gamespot1.cbsistatic.com/uploads/original/172/1720905/3712101-20200720163658_1.jpg" alt="Card image cap">
-				<div class="card-body">
-					<h5 class="card-title">Rock Game</h5>
-					<p class="card-text">This is a wider card with supporting text
-						below as a natural lead-in to additional content. This card has
-						even longer content than the first to show that equal height
-						action.</p>
-					<p class="card-text">
-						<small class="text-muted">Last updated 3 mins ago</small>
-					</p>
-				</div>
-			</div>
-		</div> -->
-	</div>
-
-	<!-- <div class="container">
-
-		<div class="row">
-			<div class="col">
-
-				<form method="post">
-										<div class="form-group mt-5">
-						<label for="priceRange">Filter products by price</label>
-						<div class="form-control">
-							<b class="mr-2">€ 10</b> <input id="priceRange" type="text"
-								class="span2" value="" data-slider-min="1" data-slider-max="100"
-								data-slider-step="2" data-slider-value="[5,100]"
-								data-slider-tooltip="show" /> <b class="ml-2">€ 100</b> <input
-								type="hidden" id="rangeMin" th:field="*{min}" /> <input
-								type="hidden" id="rangeMax" th:field="*{max}" />
-						</div>
-					</div>
-
-					<div id="games" class="mb-3">
-						<div th:replace="games :: list"></div>
-					</div>
-
-					<button class="btn btn-primary" type="submit">Submit form</button>
-				</form>
-
-			</div>
-		</div>
-	</div> -->
-
-
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-		crossorigin="anonymous"></script>
-	<!-- 	<script th:rel="stylesheet"
-		th:src="@{assets/bootstrap-slider/bootstrap-slider.js}"></script> -->
-
-	<!-- 	<script>
-		$("#priceRange").slider({});
-		$("#priceRange").on(
-				"slideStop",
-				function(stopEvent) {
-					var range = stopEvent.value;
-					$("#rangeMin").val(range[0]);
-					$("#rangeMax").val(range[1]);
-
-					$.get("/products?min=" + range[0] + "&max=" + range[1],
-							function(data) {
-								$("#products").html(data);
-							});
-				});
-	</script> -->
-
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+			crossorigin="anonymous"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+			crossorigin="anonymous"></script>
+		<script
+			src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+			crossorigin="anonymous"></script>
 </body>
 </html>

@@ -45,7 +45,7 @@ public class GamesiteApplication {
 			Game game2 = new Game("Clickermania", "https://wsd2018-game.s3.eu-central-1.amazonaws.com/index.html", "https://imgd.androidappsapk.co/EqtyrCp1QZDSj0Sk_-aYSC48Mg8TO1tC7rVI_8NSUkVwNClmALzK_l2LozxqTpxx9w=s500", "Casual", "Click mania allows you to gain as many scores as you can. You just need to click the circle to gain score, buy upgrades to automate clicking. A colorful and addictive game.", urepository.findByUsername("user"));
 			grepository.save(game2);
 			
-			Game game3 = new Game("Flappy Bird", "", "https://services.garmin.com/appsLibraryBusinessServices_v0/rest/apps/baff701c-a71e-4854-bf0e-5a775793a838/icon/97f12c5a-6cd2-4b27-8084-291195737214", "Arcade", "Flappy Bird is a mobile game. The game is a side-scroller where the player controls a bird, attempting to fly between columns of green pipes without hitting them.", urepository.findByUsername("user"));
+			Game game3 = new Game("Flappy Bird", "", "https://services.garmin.com/appsLibraryBusinessServices_v0/rest/apps/baff701c-a71e-4854-bf0e-5a775793a838/icon/97f12c5a-6cd2-4b27-8084-291195737214", "Arcade", "Flappy bird is an arcade-style game. The game is a side-scroller where the player controls a bird, which moves persistently to the right and attempt to fly between green pipes without hitting them.", urepository.findByUsername("user"));
 			grepository.save(game3);
 			
 //			String user2Password = bcrypt.encode("user2");
