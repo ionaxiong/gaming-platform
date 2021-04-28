@@ -21,18 +21,15 @@ import com.example.Gamesite.repository.UserRepository;
 @SpringBootApplication
 public class GamesiteApplication {
 	private static final Logger log = LoggerFactory.getLogger(GamesiteApplication.class);
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(GamesiteApplication.class, args);
 	}
-	
+
 	@Bean
 	public CommandLineRunner gamesiteDemo(GameRepository grepository, UserRepository urepository, UserGameScoreRepository srepository) {
 		return(args) -> {
 			log.info("save game, user, and score");
-			
-			java.util.Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2011-05-18 16:29:31");
-			java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 			
 			urepository.deleteAll();
 			
@@ -42,9 +39,14 @@ public class GamesiteApplication {
 			urepository.save(user1);
 			
 			ArrayList<Game> savedgame = new ArrayList<>();
-			Game game = new Game("game1", "game1_url", "game1_image", "fantasy", "game is fantastic", timestamp, urepository.findByUsername("user"));
-			grepository.save(game);
-			savedgame.add(game);
+			Game game1 = new Game("2048", "https://2048-iframe.s3.eu-central-1.amazonaws.com/index.html", "https://cdn.elgoog.im/2048/2048-game.png", "Puzzle", "2048 is a single-player sliding tile puzzle video game. The objective of the game is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.", urepository.findByUsername("user"));
+			grepository.save(game1);
+			
+			Game game2 = new Game("Clickermania", "https://wsd2018-game.s3.eu-central-1.amazonaws.com/index.html", "https://imgd.androidappsapk.co/EqtyrCp1QZDSj0Sk_-aYSC48Mg8TO1tC7rVI_8NSUkVwNClmALzK_l2LozxqTpxx9w=s500", "Casual", "Click mania allows you to gain as many scores as you can. You just need to click the circle to gain score, buy upgrades to automate clicking. A colorful and addictive game.", urepository.findByUsername("user"));
+			grepository.save(game2);
+			
+			Game game3 = new Game("Flappy Bird", "", "https://services.garmin.com/appsLibraryBusinessServices_v0/rest/apps/baff701c-a71e-4854-bf0e-5a775793a838/icon/97f12c5a-6cd2-4b27-8084-291195737214", "Arcade", "Flappy Bird is a mobile game. The game is a side-scroller where the player controls a bird, attempting to fly between columns of green pipes without hitting them.", urepository.findByUsername("user"));
+			grepository.save(game3);
 			
 //			String user2Password = bcrypt.encode("user2");
 //			User user2 = new User("user2", user2Password, "user2@user.com", savedgame);

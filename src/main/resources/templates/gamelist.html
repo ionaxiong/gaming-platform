@@ -33,28 +33,30 @@
 					</a></li> -->
 					<li class="nav-item"><a class="nav-link" href="/gamelist">Play</a></li>
 					<li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-					<li class="nav-item"><a class="nav-link" href="/registration">Sign Up</a></li>
+					<li class="nav-item"><a class="nav-link" href="/registration">Sign
+							Up</a></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 
 	<div class="container p-3">
-		<div class="card-deck" th:each="game: ${games}">
-			<div class="card">
-				<img style="max-height: 250px; object-fit: cover;" class="card-img-top" th:src="${game.image_url}" alt="Card image cap">
+		<div class="card-deck">
+			<div class="card" th:each="game: ${games}">
+				<img style="max-height: 200px; object-fit: cover;"
+					class="card-img-top" th:src="${game.image_url}" alt="Game image">
 				<div class="card-body">
-					<h5 class="card-title">Clickermania</h5>
-					<p class="card-text">This card has supporting text below as a
-						natural lead-in to additional content.</p>
+					<h5 class="card-title" th:text="${game.name}"></h5>
+					<p class="card-text" th:text="${game.description}"></p>
 					<p class="card-text">
 						<small class="text-muted">Last updated 3 mins ago</small>
 					</p>
+					<a th:href="${game.game_url}" class="btn btn-primary">Play Now</a>
 				</div>
 			</div>
 		</div>
-		
-			<!-- <div class="card">
+
+		<!-- <div class="card">
 				<img class="card-img-top" src="https://cdn.elgoog.im/2048/2048-game.png" alt="Card image cap">
 				<div class="card-body">
 					<h5 class="card-title">2048</h5>

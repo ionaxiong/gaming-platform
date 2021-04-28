@@ -42,15 +42,13 @@ public class Game {
 		
 	}
 
-	public Game(String name, String game_url, String image_url, String category, String description,
-			Date pub_date, User publisher) {
+	public Game(String name, String game_url, String image_url, String category, String description, User publisher) {
 		super();
 		this.name = name;
 		this.game_url = game_url;
 		this.image_url = image_url;
 		this.category = category;
 		this.description = description;
-		this.pub_date = pub_date;
 		this.userId = publisher;
 	}
 
