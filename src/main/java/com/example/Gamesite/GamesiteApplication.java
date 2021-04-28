@@ -31,7 +31,7 @@ public class GamesiteApplication {
 		return(args) -> {
 			log.info("save game, user, and score");
 			
-			java.util.Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2011-05-18 16:29:31");
+			java.util.Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2011-05-18 16:29:31");
 			java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 			
 			urepository.deleteAll();

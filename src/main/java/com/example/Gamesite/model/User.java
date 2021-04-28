@@ -34,7 +34,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
     
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     @NotEmpty(message = "{email.notempty}")
     @Email(message = "Email should be valid")
     private String email;

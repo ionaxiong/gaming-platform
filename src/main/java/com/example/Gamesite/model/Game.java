@@ -1,24 +1,39 @@
 package com.example.Gamesite.model;
 
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Entity;
+
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 public class Game {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name = "gameId", nullable = false, updatable = false)
 	private Long gameId;
+	
+	@Column(name = "name", nullable = false)
 	private String name;
+	
+	@Column(name = "game_url", nullable = false)
 	private String game_url;
+	
 	private String image_url;
+	
+	@Column(name = "category", nullable = false)
 	private String category;
 	private String description;
+	
+	@CreatedDate
 	private Date pub_date;
+	
 	@ManyToOne
 	@JoinColumn(name="userId")
 	private User userId;
