@@ -41,8 +41,8 @@
 	</nav>
 	<div class="container py-5">
 		<h5>Publish a game</h5>
-		<form th:object="${game}" th:action="@{~/account/publish}" action="#"
-			method="POST">
+		<form th:object="${game}" th:action="@{~/account/publish}" action="#" method="POST">
+			
 			<div class="form-group-row my-3">
 				<label for="name" class="col-form-label">Name</label> <input
 					type="text" class="form-control" id="name" th:field="*{name}">
@@ -57,10 +57,20 @@
 			</div>
 
 			<div class="form-group-row my-3">
-				<label for="name" class="col-form-label">Name</label> <input
-					type="text" class="form-control" id="name" th:field="*{name}">
+				<label for="description" class="col-form-label">Description</label> <input
+					type="text" class="form-control" id="description" th:field="*{description}">
 			</div>
-
+			
+			<div class="form-group-row my-3">
+				<label for="game_url" class="col-form-label">Game URL</label> <input
+					type="text" class="form-control" id="game_url" th:field="*{game_url}">
+			</div>
+			
+			<div class="form-group-row my-3">
+				<label for="image_url" class="col-form-label">Image URL</label> <input
+					type="text" class="form-control" id="image_url" th:field="*{image_url}">
+			</div>
+			<a href="/account" class="btn btn-secondary">Cancel</a>
 			<button type="submit" class="btn btn-success">Submit</button>
 		</form>
 	</div>

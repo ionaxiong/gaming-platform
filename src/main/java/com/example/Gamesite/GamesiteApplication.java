@@ -36,6 +36,21 @@ public class GamesiteApplication {
 			crepository.save(new Category("Puzzle"));
 			crepository.save(new Category("Arcade"));
 			crepository.save(new Category("Casual"));
+			crepository.save(new Category("Action"));
+			crepository.save(new Category("Adventure"));
+			crepository.save(new Category("Art"));
+			crepository.save(new Category("Fantasy"));
+			crepository.save(new Category("Fighting"));
+			crepository.save(new Category("Party"));
+			crepository.save(new Category("Shooter"));
+			crepository.save(new Category("Simulation"));
+			crepository.save(new Category("Sports"));
+			crepository.save(new Category("Stealth"));
+			crepository.save(new Category("Strategy"));
+			crepository.save(new Category("Survival"));
+			crepository.save(new Category("Text-based"));
+			crepository.save(new Category("Trivia"));
+			crepository.save(new Category("Others"));
 			
 			BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 			String userPassword = bcrypt.encode("user");
