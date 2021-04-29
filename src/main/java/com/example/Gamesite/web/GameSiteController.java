@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.example.Bookstore.model.Book;
 import com.example.Gamesite.model.Game;
 import com.example.Gamesite.model.User;
 import com.example.Gamesite.repository.CategoryRepository;
@@ -135,9 +137,17 @@ public class GameSiteController {
 	}
 	
 	@RequestMapping(value="/account/publish")
-	public String publish(Model model) {
+	public String publish(Model model, Game game) {
 		model.addAttribute("game", new Game());
 		model.addAttribute("categories", crepository.findAll());
 		return "publish";
 	}
+	
+	@RequestMapping(value = "/account/publish", method = RequestMethod.POST)
+	public String save(Game game) {
+		grepository.save(game);
+		return "redirect:/account";
+	}
+	
+	
 }
