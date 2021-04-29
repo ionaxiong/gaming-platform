@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.Gamesite.model.Game;
 import com.example.Gamesite.model.User;
+import com.example.Gamesite.repository.CategoryRepository;
 import com.example.Gamesite.repository.GameRepository;
 import com.example.Gamesite.repository.UserGameScoreRepository;
 import com.example.Gamesite.repository.UserRepository;
@@ -27,6 +28,9 @@ public class GameSiteController {
 
 	@Autowired
 	private UserGameScoreRepository srepository;
+	
+	@Autowired
+	private CategoryRepository crepository;
 	
 	@Autowired
 	private UserRepository urepository;
@@ -133,6 +137,7 @@ public class GameSiteController {
 	@RequestMapping(value="/account/publish")
 	public String publish(Model model) {
 		model.addAttribute("game", new Game());
+		model.addAttribute("categories", crepository.findAll());
 		return "publish";
 	}
 }
