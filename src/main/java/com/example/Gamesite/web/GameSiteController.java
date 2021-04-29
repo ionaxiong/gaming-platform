@@ -1,15 +1,7 @@
 package com.example.Gamesite.web;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.example.Gamesite.model.Game;
 import com.example.Gamesite.model.User;
 import com.example.Gamesite.repository.GameRepository;
 import com.example.Gamesite.repository.UserGameScoreRepository;
@@ -136,5 +128,11 @@ public class GameSiteController {
 		urepository.save(U);
 
 		return "redirect:/logout";
+	}
+	
+	@RequestMapping(value="/account/publish")
+	public String publish(Model model) {
+		model.addAttribute("game", new Game());
+		return "publish";
 	}
 }

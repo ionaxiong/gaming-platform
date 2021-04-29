@@ -27,8 +27,10 @@ public class Game {
 	
 	private String image_url;
 	
-	@Column(name = "category", nullable = false)
-	private String category;
+	@ManyToOne
+	@JoinColumn(name="category", nullable = false)
+//	@Column(name = "category", nullable = false)
+	private Category category;
 	private String description;
 	
 	@CreatedDate
@@ -42,7 +44,7 @@ public class Game {
 		
 	}
 
-	public Game(String name, String game_url, String image_url, String category, String description, User publisher) {
+	public Game(String name, String game_url, String image_url, Category category, String description, User publisher) {
 		super();
 		this.name = name;
 		this.game_url = game_url;
@@ -80,11 +82,11 @@ public class Game {
 		this.image_url = image_url;
 	}
 
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
 
