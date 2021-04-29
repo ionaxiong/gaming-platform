@@ -2,12 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
-<title>GameSite</title>
+<title>User Account</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
-<link href="/css/main.css" rel="stylesheet">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
@@ -20,14 +21,19 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ml-auto">
-				
-				<!-- add favourites, user own profile link to nav bar -->
-				
-					<li sec:authorize="isAnonymous()" class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" sec:authentication="name" href="/account"></a></li>
-					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" href="/">Favourites</a></li>
-					<li sec:authorize="isAuthenticated()" class="nav-item"><a onclick="document.forms['logoutForm'].submit()" class="nav-link">Logout</a></li>
-					<li sec:authorize="isAnonymous()" class="nav-item"><a class="nav-link" href="/registration">Sign Up</a></li>
+
+					<!-- add favourites, user own profile link to nav bar -->
+
+					<li sec:authorize="isAnonymous()" class="nav-item"><a
+						class="nav-link" href="/login">Login</a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a
+						class="nav-link" sec:authentication="name" href="/account"></a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a
+						class="nav-link" href="/favourites">Favourites</a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a
+						onclick="document.forms['logoutForm'].submit()" class="nav-link">Logout</a></li>
+					<li sec:authorize="isAnonymous()" class="nav-item"><a
+						class="nav-link" href="/registration">Sign Up</a></li>
 				</ul>
 				<form id="logoutForm" method="POST" th:action="@{/logout}">
 					<input type="hidden" name="${_csrf.parameterName}"
@@ -36,26 +42,33 @@
 			</div>
 		</div>
 	</nav>
-
-	<div class="container p-3">
-		<div class="row">
-			<div class="col-md-4 col-xs-6 pb-3" th:each="game: ${games}">
-				<div class="card">
-					<img style="max-height: 200px; object-fit: cover;"
-						class="card-img-top" th:src="${game.image_url}" alt="Game image">
-					<div class="card-body">
-						<h5 class="card-title" th:text="${game.name}"></h5>
-						<p class="card-text" th:text="${game.description}"></p>
-					</div>
-					<div class="card-footer">
-						<p class="card-text">
-							<small class="text-muted">Last updated 3 mins ago</small>
-						</p>
-						<a th:href="@{/play/{id}(id=${game.gameId})}" class="btn btn-primary">Play Now</a>
-					</div>
-				</div>
-			</div>
-		</div>
+	<div class="container my-3">
+		<ul th:object="${user}" class="list-group ">
+			
+			<li class="list-group-item list-group-item-action">
+				<p class="margin-fix">Username:</p>
+				<a th:text="*{username}" href="/account/username"></a> 
+			</li>
+			
+			<li class="list-group-item list-group-item-action">
+				<a href="/account/password">Change password</a>
+			</li>
+			
+			<li class="list-group-item disabled">
+				<p class="margin-fix">Email:</p>
+				<span th:text="*{email}"></span>
+			</li>
+			
+			<li class="list-group-item disabled">
+				<p class="margin-fix">Joined on:</p>
+				<span th:text="*{join_date}"></span>
+			</li>
+			
+			<li class="list-group-item list-group-item-action">
+				<a href="/account/publish">Publish a game </a>
+			</li>
+			
+		</ul>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

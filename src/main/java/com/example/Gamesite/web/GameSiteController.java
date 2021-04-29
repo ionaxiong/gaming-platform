@@ -1,9 +1,16 @@
 package com.example.Gamesite.web;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -88,21 +95,46 @@ public class GameSiteController {
 		return "gamelist";
 	}
 	
-	@RequestMapping(value="/play/{id}", method=RequestMethod.GET)
+	@GetMapping(value="/play/{id}")
 	public String play(@PathVariable("id") Long gameId, Model model) {
 		model.addAttribute("game", grepository.findByGameId(gameId));
 		return "play";
 	}
 	
-	@RequestMapping(value="/profile", method=RequestMethod.GET)
-	public String profile(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
+	@GetMapping(value="/account")
+	public String account(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
 		model.addAttribute("user", urepository.findByUsername(username));
-		return "profile";
+		return "account";
 	}
 	
-	@RequestMapping(value="/save", method=RequestMethod.POST)
-	public String save(User user) {
-		urepository.save(user);
-		return "redirect:/";
+	@GetMapping(value="/account/username")
+	public String username(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
+		model.addAttribute("user", urepository.findByUsername(username));
+		return "username";
+	}
+	@PostMapping(value="/account/username")
+	public String saveUsername(User user, @CurrentSecurityContext(expression="authentication?.name") String username) {
+		String newUsername = user.getUsername();
+		User U = urepository.findByUsername(username);
+		U.setUsername(newUsername);
+		urepository.save(U);
+		
+		return "redirect:/logout";
+	}
+	
+	@GetMapping(value="/account/password")
+	public String password(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
+		model.addAttribute("user", new User());
+		return "password";
+	}
+	@PostMapping(value="/account/password")
+	public String savePassword(User user, @CurrentSecurityContext(expression="authentication?.name") String username) {
+		BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+		String newPassword = bcrypt.encode(user.getPassword());
+		User U = urepository.findByUsername(username);
+		U.setPassword(newPassword);
+		urepository.save(U);
+
+		return "redirect:/logout";
 	}
 }

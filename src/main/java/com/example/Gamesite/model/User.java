@@ -1,12 +1,14 @@
 package com.example.Gamesite.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,10 +20,14 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Table(name="profile")
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +48,10 @@ public class User {
     @Transient
     private String passwordConfirm;
     
-    @ManyToMany
+	@CreatedDate
+	private Date join_date;
+	
+	@ManyToMany
     private Set<Role> roles;
     
     public Set<Role> getRoles() {
@@ -105,6 +114,14 @@ public class User {
 		this.email = email;
 	}
 
+	public Date getJoin_date() {
+		return join_date;
+	}
+	
+	public void setJoin_date(Date join_date) {
+		this.join_date = join_date;
+	}
+
 	public List<Game> getSavedGames() {
 		return savedGames;
 	}
@@ -116,6 +133,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
-				+ ", passwordConfirm=" + passwordConfirm + ", roles=" + roles + ", savedGames=" + savedGames + "]";
+				+ ", passwordConfirm=" + passwordConfirm + ", join_date=" + join_date + ", roles=" + roles
+				+ ", savedGames=" + savedGames + "]";
 	}
 }
