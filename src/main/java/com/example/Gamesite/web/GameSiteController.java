@@ -234,7 +234,7 @@ public class GameSiteController {
 		@PostMapping(value = "/{id}")
 		public String postCustomer(@PathVariable("id") Long gameId, @RequestParam(value = "score") int score, @CurrentSecurityContext(expression="authentication?.name") String username) {
 			User user = urepository.findByUsername(username);
-			Game game = grepository.findById(gameId).orElseThrow();
+			Game game = grepository.findById(gameId).get();
 			Date date = new Date();
 			
 			List<UserGameScore> scores = srepository.findByUserIdAndGameId(user, game);
