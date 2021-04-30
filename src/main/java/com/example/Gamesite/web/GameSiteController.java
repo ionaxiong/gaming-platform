@@ -212,21 +212,6 @@ public class GameSiteController {
 		return "redirect:/account";
 	}
 	
-	//display games in the user favourite list
-	@RequestMapping(value = "/favourites/{id}", method=RequestMethod.POST)
-	public String favourites(@PathVariable("id") Long gameId, Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
-//		model.addAttribute("favourites");
-//		User user = urepository.findByUsername(username);
-//		List<Game> favourites = user.getSavedGames();
-//		Game newGame = grepository.findByGameId(gameId);
-//		
-//		favourites.add(newGame);
-//		user.setSavedGames(favourites);
-//		System.out.println("test");
-		return "redirect:/gamelist";
-	}
-	
-
 	@RestController
 	@RequestMapping("/api/savescore")
 	public class RestAPI {
