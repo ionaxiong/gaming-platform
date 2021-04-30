@@ -1,7 +1,5 @@
 package com.example.Gamesite;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +24,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 //	@Autowired
 //	private DataSource dataSource;
+	
+	@Bean
+	public SpringSecurityDialect springSecurityDialect() {
+		return new SpringSecurityDialect();
+	}
 	
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -49,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			        "frame-ancestors self *"))
 			.and()
 			.authorizeRequests()
-				.antMatchers("/css/**", "/js/**", "/registration", "/gamelist/**", "/play/**").permitAll()
+				.antMatchers("/css/**", "/js/**", "/registration", "/gamelist/**", "/play/**", "/").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()

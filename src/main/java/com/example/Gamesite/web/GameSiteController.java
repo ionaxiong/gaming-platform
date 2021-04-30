@@ -37,10 +37,10 @@ public class GameSiteController {
 
 	@Autowired
 	private UserGameScoreRepository srepository;
-	
+
 	@Autowired
 	private CategoryRepository crepository;
-	
+
 	@Autowired
 	private UserRepository urepository;
 
@@ -52,8 +52,8 @@ public class GameSiteController {
 
 	@Autowired
 	private UserValidator userValidator;
-	
-	//registration and authentication
+
+	// registration and authentication
 	@GetMapping("/registration")
 	public String registration(Model model) {
 		if (securityService.isAuthenticated()) {
@@ -79,8 +79,8 @@ public class GameSiteController {
 
 		return "redirect:/gamelist";
 	}
-	
-	//login page
+
+	// login page
 	@GetMapping("/login")
 	public String login(Model model, String error, String logout) {
 		if (securityService.isAuthenticated()) {
@@ -95,61 +95,79 @@ public class GameSiteController {
 
 		return "login";
 	}
-	
-	//displaying games - landing page
+
+	// displaying games - landing page
 	@RequestMapping(value = { "/", "/gamelist" })
 	public String games(Model model) {
 		model.addAttribute("games", grepository.findAll());
 		return "gamelist";
 	}
-	
+
 	// "Play Now" button direct to game playing page
-	@GetMapping(value="/play/{id}")
+	@GetMapping(value = "/play/{id}")
 	public String play(@PathVariable("id") Long gameId, Model model) {
 		model.addAttribute("game", grepository.findByGameId(gameId));
-		
+
 		Game game = grepository.findByGameId(gameId);
 		List<UserGameScore> scores = srepository.findByGameId(game);
 		scores.sort(new SortByScore());
 		model.addAttribute("scores", scores.subList(0, Math.min(scores.size(), 10)));
-		
+
 		return "play";
 	}
-	
-	//listing account details
-	@GetMapping(value="/account")
-	public String account(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
-		List<Game> gamelist = grepository.findAll();
-		gamelist.sort(new SortByName());
-		model.addAttribute("user", urepository.findByUsername(username));
-		model.addAttribute("games", gamelist);
-		return "account";
+
+	// listing account details
+	@GetMapping(value = "/account")
+	public String account(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+		// ADMIN is authorized to see a full list of games, USER can only see their own
+		// published games
+		User user = urepository.findByUsername(username);
+		String role = user.getRole();
+		if (role.equals("ADMIN")) {
+			List<Game> gamelist = grepository.findAll();
+			gamelist.sort(new SortByName());
+			model.addAttribute("user", urepository.findByUsername(username));
+			model.addAttribute("games", gamelist);
+			return "account";
+		} else if (role.equals("USER")) {
+			List<Game> gamelist = grepository.findByUserId(user);
+			gamelist.sort(new SortByName());
+			model.addAttribute("user", urepository.findByUsername(username));
+			model.addAttribute("games", gamelist);
+			return "account";
+		} else {
+			return "/login";
+		}
+
 	}
-	
-	//updating username 
-	@GetMapping(value="/account/username")
-	public String username(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
+
+	// updating username
+	@GetMapping(value = "/account/username")
+	public String username(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
 		model.addAttribute("user", urepository.findByUsername(username));
 		return "username";
 	}
-	@PostMapping(value="/account/username")
-	public String saveUsername(User user, @CurrentSecurityContext(expression="authentication?.name") String username) {
+
+	@PostMapping(value = "/account/username")
+	public String saveUsername(User user,
+			@CurrentSecurityContext(expression = "authentication?.name") String username) {
 		String newUsername = user.getUsername();
 		User U = urepository.findByUsername(username);
 		U.setUsername(newUsername);
 		urepository.save(U);
-		
+
 		return "redirect:/logout";
 	}
-	
-	//updating password 
-	@GetMapping(value="/account/password")
-	public String password(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
+
+	// updating password
+	@GetMapping(value = "/account/password")
+	public String password(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
 		model.addAttribute("user", new User());
 		return "password";
 	}
-	@PostMapping(value="/account/password")
-	public String savePassword(User user, @CurrentSecurityContext(expression="authentication?.name") String username) {
+
+	@PostMapping(value = "/account/password")
+	public String savePassword(User user, @CurrentSecurityContext(expression = "authentication?.name") String username) {
 		BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 		String newPassword = bcrypt.encode(user.getPassword());
 		User U = urepository.findByUsername(username);
@@ -158,70 +176,104 @@ public class GameSiteController {
 
 		return "redirect:/logout";
 	}
-	
-	//public a new game
-	@RequestMapping(value="/account/publish")
+
+	// public a new game
+	@RequestMapping(value = "/account/publish")
 	public String publish(Model model, Game game) {
 		model.addAttribute("game", new Game());
 		model.addAttribute("categories", crepository.findAll());
 		return "publish";
 	}
-	
+
 	@RequestMapping(value = "/account/publish", method = RequestMethod.POST)
 	public String save(Game game) {
 		grepository.save(game);
 		return "redirect:/account";
 	}
-	
-	//edit a game
-	@GetMapping(value="/account/edit/{id}")
-	public String editGame(@PathVariable("id") Long gameId, Model model) {
-		model.addAttribute("game", grepository.findByGameId(gameId));
-		model.addAttribute("categories", crepository.findAll());
-		return "editgame";
+
+	// edit a game
+	@GetMapping(value = "/account/edit/{id}")
+	public String editGame(@PathVariable("id") Long gameId, Model model,
+			@CurrentSecurityContext(expression = "authentication?.name") String username) {
+		// check if game is published by current logged in user, or that current logged in user is admin
+		User user = urepository.findByUsername(username);
+		String role = user.getRole();
+		Game game = grepository.findByGameId(gameId);
+		if (role.equals("ADMIN") || game.getPublisher() == user) {
+			model.addAttribute("game", game);
+			model.addAttribute("categories", crepository.findAll());
+
+			return "editgame";
+
+		} else {
+			return "login";
+		}
+
 	}
-	@PostMapping(value="/account/edit")
-	public String editGame(@RequestParam(name = "gameId") Long gameId, Game game) {
+
+	@PostMapping(value = "/account/edit")
+	public String editGame(@RequestParam(name = "gameId") Long gameId, Game game, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+		// check if game is published by current logged in user, or that current logged in user is admin
+		User user = urepository.findByUsername(username);
+		String role = user.getRole();
+		Game g = grepository.findByGameId(gameId);
+		if (role.equals("ADMIN") || g.getPublisher() == user) {
+			g.setCategory(game.getCategory());
+			g.setDescription(game.getDescription());
+			g.setGame_url(game.getGame_url());
+			g.setImage_url(game.getImage_url());
+			g.setName(game.getName());
+
+			grepository.save(g);
+
+			return "redirect:/account";
+
+		} else {
+			return "login";
+		}
+	}
+
+	// delete a game
+	@GetMapping(value = "/account/delete/{id}")
+	public String deleteGame(@PathVariable("id") Long gameId, Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+		// check if game is published by current logged in user, or that current logged in user is admin
+		User user = urepository.findByUsername(username);
+		String role = user.getRole();
 		Game g = grepository.findByGameId(gameId);
 		
-		// TODO: check if game is published by current logged in user, or that current logged in user is admin
-		
-		g.setCategory(game.getCategory());
-		g.setDescription(game.getDescription());
-		g.setGame_url(game.getGame_url());
-		g.setImage_url(game.getImage_url());
-		g.setName(game.getName());
-		
-		grepository.save(g);
-		
-		return "redirect:/account";
+		if (role.equals("ADMIN") || g.getPublisher() == user) {
+			model.addAttribute("game", grepository.findByGameId(gameId));
+			model.addAttribute("categories", crepository.findAll());
+			return "deletegame";
+		} else {
+			return "login";
+		}
 	}
-	
-	//delete a game
-	@GetMapping(value="/account/delete/{id}")
-	public String deleteGame(@PathVariable("id") Long gameId, Model model) {
-		model.addAttribute("game", grepository.findByGameId(gameId));
-		model.addAttribute("categories", crepository.findAll());
-		return "deletegame";
-	}
-	@PostMapping(value="/account/delete")
-	public String deleteGame(@RequestParam(name = "gameId") Long gameId, Game game) {
+
+	@PostMapping(value = "/account/delete")
+	public String deleteGame(@RequestParam(name = "gameId") Long gameId, Game game, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+		User user = urepository.findByUsername(username);
+		String role = user.getRole();
 		Game g = grepository.findByGameId(gameId);
-		grepository.delete(g);
-		
-		return "redirect:/account";
+		if (role.equals("ADMIN") || g.getPublisher() == user) {
+			grepository.delete(g);
+			return "redirect:/account";
+		} else {
+			return "login";
+		}
 	}
-	
+
 	@RestController
 	@RequestMapping("/api/savescore")
 	public class RestAPI {
 
 		@PostMapping(value = "/{id}")
-		public String postCustomer(@PathVariable("id") Long gameId, @RequestParam(value = "score") int score, @CurrentSecurityContext(expression="authentication?.name") String username) {
+		public String postCustomer(@PathVariable("id") Long gameId, @RequestParam(value = "score") int score,
+				@CurrentSecurityContext(expression = "authentication?.name") String username) {
 			User user = urepository.findByUsername(username);
 			Game game = grepository.findById(gameId).get();
 			Date date = new Date();
-			
+
 			List<UserGameScore> scores = srepository.findByUserIdAndGameId(user, game);
 
 			if (scores.size() == 0) {
@@ -241,5 +293,5 @@ public class GameSiteController {
 		}
 
 	}
-	
+
 }

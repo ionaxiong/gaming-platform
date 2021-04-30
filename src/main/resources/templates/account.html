@@ -63,8 +63,8 @@
 		</ul>
 		<hr class="my-5"/>
 		<h5 >Game Management</h5>
-		<div>
 		<a href="/account/publish" class="btn btn-success my-3">Publish game</a>		
+		<div th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
 			<table class="table table-striped container my-2">
 			<tr>
 				<th>Name</th>
@@ -81,6 +81,26 @@
 				<td><a th:href="@{/account/edit/{id}(id=${game.gameId})}" class="btn btn-secondary">Edit</a></td>
 			</tr>
 		</table>
+		</div>
+		<div th:if="${#authorization.expression('hasAuthority(''USER'')')}">
+			<div th:if="${#authorization.expression('isAuthenticated()')}">
+     			<table class="table table-striped container my-2">
+					<tr>
+						<th>Name</th>
+						<th>Category</th>
+						<th>Game URL</th>
+						<th></th>
+						<th></th>
+					</tr>
+					<tr th:each="game: ${games}">
+						<td th:text="${game.name}"></td>
+						<td th:text="${game.category}"></td>
+						<td th:text="${game.game_url}"></td>
+						<td><a th:href="@{/account/delete/{id}(id=${game.gameId})}" class="btn btn-danger">Delete</a></td>
+						<td><a th:href="@{/account/edit/{id}(id=${game.gameId})}" class="btn btn-secondary">Edit</a></td>
+					</tr>
+				</table>
+     		</div>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
