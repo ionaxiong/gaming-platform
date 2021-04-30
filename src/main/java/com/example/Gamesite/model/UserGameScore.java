@@ -87,8 +87,8 @@ public class UserGameScore {
 	@Override
 	public String toString() {
 		return "UserGameScore [\n\tuserGameScoreId=" + userGameScoreId + 
-				", \n\tgame.id=" + gameId.getGameId().toString() + 
-				", \n\tuser.name=" + userId.getUsername().toString() + 
+				", \n\tgame.id=" + gameId + 
+				", \n\tuser.name=" + userId +
 				", \n\tscore=" + score + "]";
 	}
 }

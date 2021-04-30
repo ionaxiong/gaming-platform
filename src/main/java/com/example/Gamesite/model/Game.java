@@ -1,5 +1,6 @@
 package com.example.Gamesite.model;
 
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.springframework.data.annotation.CreatedDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Game {
@@ -29,7 +32,6 @@ public class Game {
 	
 	@ManyToOne
 	@JoinColumn(name="category", nullable = false)
-//	@Column(name = "category", nullable = false)
 	private Category category;
 	private String description;
 	
@@ -113,11 +115,19 @@ public class Game {
 	public void setPublisher(User publisher) {
 		this.userId = publisher;
 	}
+	
+	static public class SortByName implements Comparator<Game> {
+		@Override
+		public int compare(Game a, Game b)
+		{
+			return a.name.compareTo(b.name);
+		}
+	}
 
 	@Override
 	public String toString() {
 		return "Game [gameId=" + gameId + ", name=" + name + ", game_url=" + game_url + ", image_url=" + image_url
-				+ ", category=" + category + ", description=" + description + ", pub_date=" + pub_date + ", publisher="
-				+ userId.getUsername() + "]";
+				+ ", category=" + category + ", description=" + description + ", pub_date=" + pub_date 
+				+ ", publisher=" + userId + "]";
 	}
 }

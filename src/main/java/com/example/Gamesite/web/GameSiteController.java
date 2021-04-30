@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Gamesite.model.Game;
+import com.example.Gamesite.model.Game.SortByName;
 import com.example.Gamesite.model.User;
 import com.example.Gamesite.model.UserGameScore;
 import com.example.Gamesite.model.UserGameScore.SortByScore;
@@ -118,7 +119,10 @@ public class GameSiteController {
 	//listing account details
 	@GetMapping(value="/account")
 	public String account(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
+		List<Game> gamelist = grepository.findAll();
+		gamelist.sort(new SortByName());
 		model.addAttribute("user", urepository.findByUsername(username));
+		model.addAttribute("games", gamelist);
 		return "account";
 	}
 	
@@ -166,6 +170,45 @@ public class GameSiteController {
 	@RequestMapping(value = "/account/publish", method = RequestMethod.POST)
 	public String save(Game game) {
 		grepository.save(game);
+		return "redirect:/account";
+	}
+	
+	//edit a game
+	@GetMapping(value="/account/edit/{id}")
+	public String editGame(@PathVariable("id") Long gameId, Model model) {
+		model.addAttribute("game", grepository.findByGameId(gameId));
+		model.addAttribute("categories", crepository.findAll());
+		return "editgame";
+	}
+	@PostMapping(value="/account/edit")
+	public String editGame(@RequestParam(name = "gameId") Long gameId, Game game) {
+		Game g = grepository.findByGameId(gameId);
+		
+		// TODO: check if game is published by current logged in user, or that current logged in user is admin
+		
+		g.setCategory(game.getCategory());
+		g.setDescription(game.getDescription());
+		g.setGame_url(game.getGame_url());
+		g.setImage_url(game.getImage_url());
+		g.setName(game.getName());
+		
+		grepository.save(g);
+		
+		return "redirect:/account";
+	}
+	
+	//delete a game
+	@GetMapping(value="/account/delete/{id}")
+	public String deleteGame(@PathVariable("id") Long gameId, Model model) {
+		model.addAttribute("game", grepository.findByGameId(gameId));
+		model.addAttribute("categories", crepository.findAll());
+		return "deletegame";
+	}
+	@PostMapping(value="/account/delete")
+	public String deleteGame(@RequestParam(name = "gameId") Long gameId, Game game) {
+		Game g = grepository.findByGameId(gameId);
+		grepository.delete(g);
+		
 		return "redirect:/account";
 	}
 	

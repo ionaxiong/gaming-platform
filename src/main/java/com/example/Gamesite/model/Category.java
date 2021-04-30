@@ -10,9 +10,6 @@ public class Category {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	private String name;
-	@OneToMany(cascade=CascadeType.ALL,mappedBy="category")
-	@JsonIgnore
-	private List<Game> games;
 	
 	public Category() {
 		
@@ -39,16 +36,8 @@ public class Category {
 		this.name = name;
 	}
 
-	public List<Game> getGames() {
-		return games;
-	}
-
-	public void setGames(List<Game> games) {
-		this.games = games;
-	}
-
 	@Override
 	public String toString() {
-		return "Category [id=" + id + ", name=" + name + ", games=" + games + "]";
+		return this.getName();
 	}
 }

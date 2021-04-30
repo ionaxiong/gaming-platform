@@ -62,28 +62,21 @@ public class User {
 		this.roles = roles;
 	}
 
-//	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "userId")
-//    @JsonIgnore
-	@OneToMany()
-    @Column(name = "savedGames", nullable = true)
-    private List<Game> savedGames = new ArrayList<>();
-    
     public User() {
     }
     
-	public User(String username, String password, String email, List<Game> savedGames) {
+	public User(String username, String password, String email) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.email = email;
-		this.savedGames = savedGames;
 	}
 
 	public Long getUserId() {
 		return userId;
 	}
 
-	public String getUsername() {
+	public String getUsername() {	
 		return username;
 	}
 
@@ -123,18 +116,9 @@ public class User {
 		this.join_date = join_date;
 	}
 
-	public List<Game> getSavedGames() {
-		return savedGames;
-	}
-
-	public void setSavedGames(List<Game> savedGames) {
-		this.savedGames = savedGames;
-	}
-
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
-				+ ", passwordConfirm=" + passwordConfirm + ", join_date=" + join_date + ", roles=" + roles
-				+ ", savedGames=" + savedGames.toString() + "]";
+				+ ", passwordConfirm=" + passwordConfirm + ", join_date=" + join_date + ", roles=" + roles + "]";
 	}
 }

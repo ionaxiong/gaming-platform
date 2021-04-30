@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
-<title>User Account</title>
+<title>Publish Game</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -39,51 +39,45 @@
 			</div>
 		</div>
 	</nav>
-	<div class="container my-5">
-	<h5>Profile</h5>
-		<ul th:object="${user}" class="list-group my-4">
+	<div class="container py-5">
+		<h5>Edit game</h5>
+		<form th:object="${game}" th:action="@{~/account/edit}" action="#" method="POST">
 			
-			<li class="list-group-item list-group-item-action">
-				<p class="margin-fix">Username:</p>
-				<a th:text="*{username}" href="/account/username"></a> 
-			</li>
-			
-			<li class="list-group-item list-group-item-action">
-				<a href="/account/password">Change password</a>
-			</li>
-			
-			<li class="list-group-item disabled">
-				<p class="margin-fix">Email:</p>
-				<span th:text="*{email}"></span>
-			</li>
-			
-			<li class="list-group-item disabled">
-				<p class="margin-fix">Joined on:</p>
-				<span th:text="*{join_date}"></span>
-			</li>
+			<div class="form-group-row my-3">
+				<label for="name" class="col-form-label">Name</label> <input
+					type="text" class="form-control" id="name" th:field="*{name}">
+			</div>
 
-		</ul>
-		<hr class="my-5"/>
-		<h5 >Game Management</h5>
-		<div>
-		<a href="/account/publish" class="btn btn-success my-3">Publish game</a>		
-			<table class="table table-striped container my-2">
-			<tr>
-				<th>Name</th>
-				<th>Category</th>
-				<th>Game URL</th>
-				<th></th>
-				<th></th>
-			</tr>
-			<tr th:each="game: ${games}">
-				<td th:text="${game.name}"></td>
-				<td th:text="${game.category}"></td>
-				<td th:text="${game.game_url}"></td>
-				<td><a th:href="@{/account/delete/{id}(id=${game.gameId})}" class="btn btn-danger">Delete</a></td>
-				<td><a th:href="@{/account/edit/{id}(id=${game.gameId})}" class="btn btn-secondary">Edit</a></td>
-			</tr>
-		</table>
-		</div>
+			<div class="form-group-row my-3">
+				<label for="categorylist" class="col-form-label">Category</label> 
+				<select id="categorylist" th:field="*{category}" class="form-control">
+					<option th:each="category: ${categories}" th:value="${category.id}"
+						th:text="${category.name}"></option>
+				</select>
+			</div>
+
+			<div class="form-group-row my-3">
+				<label for="description" class="col-form-label">Description</label> <textarea
+					type="text" class="form-control" id="description" th:field="*{description}"></textarea>
+			</div>
+			
+			<div class="form-group-row my-3">
+				<label for="game_url" class="col-form-label">Game URL</label> <input
+					type="text" class="form-control" id="game_url" th:field="*{game_url}">
+			</div>
+			
+			<div class="form-group-row my-3">
+				<label for="image_url" class="col-form-label">Image URL</label> <input
+					type="text" class="form-control" id="image_url" th:field="*{image_url}">
+			</div>
+			
+			<input type="hidden" id="gameId" th:field="*{gameId}">
+			<input type="hidden" id="publisher" th:field="*{publisher}">
+<!-- 			<input type="hidden" id="pub_date" th:field="*{pub_date}">
+ -->			
+			<a href="/account" class="btn btn-secondary">Cancel</a>
+			<input type="submit" value="Save" class="btn btn-success"></input>
+		</form>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
