@@ -1,20 +1,18 @@
 package com.example.Gamesite.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
@@ -22,8 +20,6 @@ import javax.validation.constraints.NotEmpty;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Table(name="profile")
 @Entity
@@ -51,25 +47,18 @@ public class User {
 	@CreatedDate
 	private Date join_date;
 	
-	@ManyToMany
-    private Set<Role> roles;
-    
-    public Set<Role> getRoles() {
-		return roles;
-	}
+    @Column(name = "role", nullable = false)
+    private String role;
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
-
-    public User() {
+	public User() {
     }
     
-	public User(String username, String password, String email) {
+	public User(String username, String password, String email, String role) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.email = email;
+		this.role = role;
 	}
 
 	public Long getUserId() {
@@ -107,6 +96,14 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	public Date getJoin_date() {
 		return join_date;
@@ -119,6 +116,6 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
-				+ ", passwordConfirm=" + passwordConfirm + ", join_date=" + join_date + ", roles=" + roles + "]";
+				+ ", passwordConfirm=" + passwordConfirm + ", join_date=" + join_date + ", role=" + role + "]";
 	}
 }

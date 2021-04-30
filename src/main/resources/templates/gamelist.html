@@ -47,12 +47,7 @@
 						<p class="card-text">
 							<small class="text-muted">Last updated 3 mins ago</small>
 						</p>
-						<div class="row mx-0">
-							<form th:action="@{favourites/{id}(id=${game.gameId})}" action="#" method="POST" class="mr-2 ml-auto">
-								<input type="submit" value="Favourite" class="btn btn-success" />
-							</form>
-							<a th:href="@{/play/{id}(id=${game.gameId})}" class="btn btn-primary">Play Now</a>
-						</div>
+						<a th:href="@{/play/{id}(id=${game.gameId})}" class="btn btn-primary">Play Now</a>
 					</div>
 				</div>
 			</div>

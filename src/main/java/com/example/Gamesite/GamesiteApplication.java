@@ -52,11 +52,11 @@ public class GamesiteApplication {
 			
 			BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 			String userPassword = bcrypt.encode("user");
-			User user1 = new User("user", userPassword, "user@user.com");
+			User user1 = new User("user", userPassword, "user@user.com", "USER");
 			urepository.save(user1);
 			
 			String adminPassword = bcrypt.encode("admin");
-			User admin = new User("admin", adminPassword, "admin@admin.com");
+			User admin = new User("admin", adminPassword, "admin@admin.com", "ADMIN");
 			urepository.save(admin);
 			
 			Game game1 = new Game("2048", "https://2048-iframe.s3.eu-central-1.amazonaws.com/index.html", "https://cdn.elgoog.im/2048/2048-game.png", crepository.findByName("Puzzle").get(0), "2048 is a single-player sliding tile puzzle video game. The objective of the game is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.", urepository.findByUsername("user"));
