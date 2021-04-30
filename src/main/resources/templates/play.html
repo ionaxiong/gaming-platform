@@ -36,8 +36,15 @@
 		</div>
 	</nav>
 	
-    <div class="alert alert-success text-center mb-0" style="display: none;" id="save-alert" role="alert">
+    <div th:if="${#authorization.expression('isAuthenticated()')}" class="alert alert-success text-center mb-0" style="display: none;" id="save-alert" role="alert">
         Score saved! Refresh the page to see it on the scoreboard (if you're in the top 10!)
+    </div>
+    
+    <div th:if="${!#authorization.expression('isAuthenticated()')}" class="alert alert-warning alert-dismissible fade show text-center mb-0" role="alert">
+		<strong>Score cannot be saved!</strong> Please log in in order to save scores.
+		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		    <span aria-hidden="true">&times;</span>
+		  </button>
     </div>
 	
 	<div class="container p-3">
