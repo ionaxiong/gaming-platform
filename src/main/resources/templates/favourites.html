@@ -22,7 +22,7 @@
 				<ul class="navbar-nav ml-auto">
 					<li sec:authorize="isAnonymous()" class="nav-item"><a class="nav-link" href="/login">Login</a></li>
 					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" sec:authentication="name" href="/account"></a></li>
-					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" href="/favourites">Favourites</a></li>
+					<li sec:authorize="isAuthenticated()" class="nav-item"><a class="nav-link" href="/">Favourites</a></li>
 					<li sec:authorize="isAuthenticated()" class="nav-item"><a onclick="document.forms['logoutForm'].submit()" class="nav-link">Logout</a></li>
 					<li sec:authorize="isAnonymous()" class="nav-item"><a class="nav-link" href="/registration">Sign Up</a></li>
 				</ul>
@@ -48,12 +48,8 @@
 						<p class="card-text">
 							<small class="text-muted">Last updated 3 mins ago</small>
 						</p>
-						<div class="row mx-0">
-							<form th:action="@{favourites/{id}(id=${game.gameId})}" action="#" method="POST" class="mr-2 ml-auto">
-								<input type="submit" value="Favourite" class="btn btn-success" />
-							</form>
-							<a th:href="@{/play/{id}(id=${game.gameId})}" class="btn btn-primary">Play Now</a>
-						</div>
+						<a th:href="@{/play/{id}(id=${game.gameId})}" class="btn btn-primary">Play Now</a>
+						<a th:href="@{/play/{id}(id=${game.gameId})}" class="btn btn-success">Save</a>
 					</div>
 				</div>
 			</div>

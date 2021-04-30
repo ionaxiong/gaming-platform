@@ -1,5 +1,7 @@
 package com.example.Gamesite.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.example.Bookstore.model.Book;
 import com.example.Gamesite.model.Game;
 import com.example.Gamesite.model.User;
 import com.example.Gamesite.repository.CategoryRepository;
@@ -45,7 +46,8 @@ public class GameSiteController {
 
 	@Autowired
 	private UserValidator userValidator;
-
+	
+	//registration and authentication
 	@GetMapping("/registration")
 	public String registration(Model model) {
 		if (securityService.isAuthenticated()) {
@@ -71,7 +73,8 @@ public class GameSiteController {
 
 		return "redirect:/gamelist";
 	}
-
+	
+	//login page
 	@GetMapping("/login")
 	public String login(Model model, String error, String logout) {
 		if (securityService.isAuthenticated()) {
@@ -86,25 +89,29 @@ public class GameSiteController {
 
 		return "login";
 	}
-
+	
+	//displaying games - landing page
 	@RequestMapping(value = { "/", "/gamelist" })
 	public String games(Model model) {
 		model.addAttribute("games", grepository.findAll());
 		return "gamelist";
 	}
 	
+	// "Play Now" button direct to game playing page
 	@GetMapping(value="/play/{id}")
 	public String play(@PathVariable("id") Long gameId, Model model) {
 		model.addAttribute("game", grepository.findByGameId(gameId));
 		return "play";
 	}
 	
+	//listing account details
 	@GetMapping(value="/account")
 	public String account(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
 		model.addAttribute("user", urepository.findByUsername(username));
 		return "account";
 	}
 	
+	//updating username 
 	@GetMapping(value="/account/username")
 	public String username(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
 		model.addAttribute("user", urepository.findByUsername(username));
@@ -120,6 +127,7 @@ public class GameSiteController {
 		return "redirect:/logout";
 	}
 	
+	//updating password 
 	@GetMapping(value="/account/password")
 	public String password(Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
 		model.addAttribute("user", new User());
@@ -136,6 +144,7 @@ public class GameSiteController {
 		return "redirect:/logout";
 	}
 	
+	//public a new game
 	@RequestMapping(value="/account/publish")
 	public String publish(Model model, Game game) {
 		model.addAttribute("game", new Game());
@@ -149,5 +158,18 @@ public class GameSiteController {
 		return "redirect:/account";
 	}
 	
+	//display games in the user favourite list
+	@RequestMapping(value = "/favourites/{id}", method=RequestMethod.POST)
+	public String favourites(@PathVariable("id") Long gameId, Model model, @CurrentSecurityContext(expression="authentication?.name") String username) {
+//		model.addAttribute("favourites");
+//		User user = urepository.findByUsername(username);
+//		List<Game> favourites = user.getSavedGames();
+//		Game newGame = grepository.findByGameId(gameId);
+//		
+//		favourites.add(newGame);
+//		user.setSavedGames(favourites);
+//		System.out.println("test");
+		return "redirect:/gamelist";
+	}
 	
 }

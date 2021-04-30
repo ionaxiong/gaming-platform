@@ -62,8 +62,9 @@ public class User {
 		this.roles = roles;
 	}
 
-	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "userId")
-    @JsonIgnore
+//	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "userId")
+//    @JsonIgnore
+	@OneToMany()
     @Column(name = "savedGames", nullable = true)
     private List<Game> savedGames = new ArrayList<>();
     
