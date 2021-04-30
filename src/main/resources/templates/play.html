@@ -37,6 +37,10 @@
 		</div>
 	</nav>
 	
+    <div class="alert alert-success text-center mb-0" style="display: none;" id="save-alert" role="alert">
+        Score saved! Refresh the page to see it on the scoreboard (if you're in the top 10!)
+    </div>
+	
 	<div class="container p-3">
 		<div style="height: calc(100vh - 100px)" id="gameWrapper">
 			<iframe id="gameIframe" th:src="${game.game_url}"
@@ -44,17 +48,53 @@
 			</iframe>
 		</div>
 	</div>
+	
+	<table class="container p-3 table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Score</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="score: ${scores}">
+                <th scope="row">1</th>
+                <td th:text="${score.userId.username}"></td>
+                <td th:text="${score.score}"></td>
+                <td th:text="${score.date}"></td>
+            </tr>
+        </tbody>
+    </table>
  
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-		integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-		integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-		crossorigin="anonymous"></script>
+    <script th:inline="javascript">
+        window.addEventListener("message", function(evt) {
+            if (evt.data.messageType === "SCORE") {
+                submitScore(evt.data.score);
+            } else if (evt.data.messageType === "ERROR") {
+                alert(evt.data.info);
+            }
+        });
+
+        /*<![CDATA[*/
+        function submitScore(score) {
+            var gameId = ( /*[[${game.gameId}]]*/ "default" );
+            $.ajax({
+                type: 'POST',
+                url: '/api/savescore/' + gameId + '/?score=' + score,
+                success: function(e) {
+                    console.log(e);
+                    $("#save-alert").slideDown("slow", function() {
+                        // Animation complete.
+                    });
+                }
+            });
+        }
+        /*]]>*/
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 </body>
 </html>

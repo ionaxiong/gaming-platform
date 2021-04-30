@@ -1,5 +1,6 @@
 package com.example.Gamesite.web;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Gamesite.model.Game;
 import com.example.Gamesite.model.User;
+import com.example.Gamesite.model.UserGameScore;
+import com.example.Gamesite.model.UserGameScore.SortByScore;
 import com.example.Gamesite.repository.CategoryRepository;
 import com.example.Gamesite.repository.GameRepository;
 import com.example.Gamesite.repository.UserGameScoreRepository;
@@ -101,6 +106,12 @@ public class GameSiteController {
 	@GetMapping(value="/play/{id}")
 	public String play(@PathVariable("id") Long gameId, Model model) {
 		model.addAttribute("game", grepository.findByGameId(gameId));
+		
+		Game game = grepository.findByGameId(gameId);
+		List<UserGameScore> scores = srepository.findByGameId(game);
+		scores.sort(new SortByScore());
+		model.addAttribute("scores", scores.subList(0, Math.min(scores.size(), 10)));
+		
 		return "play";
 	}
 	
@@ -170,6 +181,37 @@ public class GameSiteController {
 //		user.setSavedGames(favourites);
 //		System.out.println("test");
 		return "redirect:/gamelist";
+	}
+	
+
+	@RestController
+	@RequestMapping("/api/savescore")
+	public class RestAPI {
+
+		@PostMapping(value = "/{id}")
+		public String postCustomer(@PathVariable("id") Long gameId, @RequestParam(value = "score") int score, @CurrentSecurityContext(expression="authentication?.name") String username) {
+			User user = urepository.findByUsername(username);
+			Game game = grepository.findById(gameId).orElseThrow();
+			Date date = new Date();
+			
+			List<UserGameScore> scores = srepository.findByUserIdAndGameId(user, game);
+
+			if (scores.size() == 0) {
+				UserGameScore gamescore = new UserGameScore(game, user, score, date);
+				srepository.save(gamescore);
+				return "Created new high score";
+			} else {
+				UserGameScore gamescore = scores.get(0);
+				if (gamescore.getScore() < score) {
+					gamescore.setScore(score);
+					gamescore.setDate(date);
+					srepository.save(gamescore);
+					return "Updated high score";
+				}
+				return "No new high score";
+			}
+		}
+
 	}
 	
 }

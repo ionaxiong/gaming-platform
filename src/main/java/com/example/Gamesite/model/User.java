@@ -135,6 +135,6 @@ public class User {
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
 				+ ", passwordConfirm=" + passwordConfirm + ", join_date=" + join_date + ", roles=" + roles
-				+ ", savedGames=" + savedGames + "]";
+				+ ", savedGames=" + savedGames.toString() + "]";
 	}
 }

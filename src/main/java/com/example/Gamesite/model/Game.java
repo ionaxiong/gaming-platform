@@ -117,7 +117,7 @@ public class Game {
 	@Override
 	public String toString() {
 		return "Game [gameId=" + gameId + ", name=" + name + ", game_url=" + game_url + ", image_url=" + image_url
-				+ ", category=" + category + ", description=" + description + ", pub_date=" + pub_date + ", userId="
-				+ userId + "]";
+				+ ", category=" + category + ", description=" + description + ", pub_date=" + pub_date + ", publisher="
+				+ userId.getUsername() + "]";
 	}
 }
