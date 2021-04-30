@@ -39,10 +39,11 @@
 	</nav>
 	<div class="container py-5">
 		<h5>Update username</h5>
-		<form th:object="${user}" th:action="@{~/account/username}" action="#" method="POST">
+		<form th:object="${userForm}" th:action="@{~/account/username}" action="#" method="POST">
 			<div class="form-group-row my-3">
 				<label for="username" class="col-form-label">Username</label>
 				<input type="text" class="form-control" id="username" th:field="*{username}">
+				<span class="has-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
 			</div>
 			<a href="/account" class="btn btn-secondary">Cancel</a>
 			<button type="submit" class="btn btn-success">Submit</button>

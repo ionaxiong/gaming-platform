@@ -49,4 +49,32 @@ public class UserValidator implements Validator {
 			errors.rejectValue("email", "Duplicate.userForm.email");
 		}
 	}
+	
+	public void validateUsername(Object o, Errors errors) {		
+		User user = (User) o;
+
+		//username validation within account
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "NotEmpty");
+		if (user.getUsername().length() < 6 || user.getUsername().length() > 32) {
+			errors.rejectValue("username", "Size.userForm.username");
+		}
+
+		if (userService.findByUsername(user.getUsername()) != null) {
+			errors.rejectValue("username", "Duplicate.userForm.username");
+		}
+	}
+	
+	public void validatePassword(Object o, Errors errors) {
+		User user = (User) o;
+		
+		//password validation within account
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
+		if (user.getPassword().length() < 8 || user.getPassword().length() > 32) {
+			errors.rejectValue("password", "Size.userForm.password");
+		}
+
+		if (!user.getPasswordConfirm().equals(user.getPassword())) {
+			errors.rejectValue("passwordConfirm", "Diff.userForm.passwordConfirm");
+		}
+	}
 }

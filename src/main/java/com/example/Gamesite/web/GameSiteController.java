@@ -68,7 +68,8 @@ public class GameSiteController {
 	@PostMapping("/registration")
 	public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
 		userValidator.validate(userForm, bindingResult);
-
+		userForm.setRole("USER");
+		
 		if (bindingResult.hasErrors()) {
 			return "registration";
 		}
@@ -144,37 +145,50 @@ public class GameSiteController {
 	// updating username
 	@GetMapping(value = "/account/username")
 	public String username(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
-		model.addAttribute("user", urepository.findByUsername(username));
+		model.addAttribute("userForm", urepository.findByUsername(username));
 		return "username";
 	}
 
 	@PostMapping(value = "/account/username")
-	public String saveUsername(User user,
-			@CurrentSecurityContext(expression = "authentication?.name") String username) {
-		String newUsername = user.getUsername();
-		User U = urepository.findByUsername(username);
-		U.setUsername(newUsername);
-		urepository.save(U);
-
-		return "redirect:/logout";
+	public String saveUsername(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+		String newUsername = userForm.getUsername();
+		userValidator.validateUsername(userForm, bindingResult);
+		
+		if (bindingResult.hasErrors()) {
+			return "username";
+			
+		} else {
+			User U = urepository.findByUsername(username);
+			U.setUsername(newUsername);
+			urepository.save(U);
+			
+			return "redirect:/logout";
+		}
 	}
 
 	// updating password
 	@GetMapping(value = "/account/password")
 	public String password(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
-		model.addAttribute("user", new User());
+		model.addAttribute("userForm", new User());
 		return "password";
 	}
 
 	@PostMapping(value = "/account/password")
-	public String savePassword(User user, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+	public String savePassword(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, @CurrentSecurityContext(expression = "authentication?.name") String username) {
 		BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-		String newPassword = bcrypt.encode(user.getPassword());
-		User U = urepository.findByUsername(username);
-		U.setPassword(newPassword);
-		urepository.save(U);
-
-		return "redirect:/logout";
+		String newPassword = bcrypt.encode(userForm.getPassword());
+		userValidator.validatePassword(userForm, bindingResult);
+		
+		if (bindingResult.hasErrors()) {
+			return "password";
+			
+		} else {
+			User U = urepository.findByUsername(username);
+			U.setPassword(newPassword);
+			urepository.save(U);
+			
+			return "redirect:/logout";
+		}
 	}
 
 	// public a new game
@@ -195,7 +209,8 @@ public class GameSiteController {
 	@GetMapping(value = "/account/edit/{id}")
 	public String editGame(@PathVariable("id") Long gameId, Model model,
 			@CurrentSecurityContext(expression = "authentication?.name") String username) {
-		// check if game is published by current logged in user, or that current logged in user is admin
+		// check if game is published by current logged in user, or that current logged
+		// in user is admin
 		User user = urepository.findByUsername(username);
 		String role = user.getRole();
 		Game game = grepository.findByGameId(gameId);
@@ -212,8 +227,10 @@ public class GameSiteController {
 	}
 
 	@PostMapping(value = "/account/edit")
-	public String editGame(@RequestParam(name = "gameId") Long gameId, Game game, @CurrentSecurityContext(expression = "authentication?.name") String username) {
-		// check if game is published by current logged in user, or that current logged in user is admin
+	public String editGame(@RequestParam(name = "gameId") Long gameId, Game game,
+			@CurrentSecurityContext(expression = "authentication?.name") String username) {
+		// check if game is published by current logged in user, or that current logged
+		// in user is admin
 		User user = urepository.findByUsername(username);
 		String role = user.getRole();
 		Game g = grepository.findByGameId(gameId);
@@ -235,12 +252,14 @@ public class GameSiteController {
 
 	// delete a game
 	@GetMapping(value = "/account/delete/{id}")
-	public String deleteGame(@PathVariable("id") Long gameId, Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
-		// check if game is published by current logged in user, or that current logged in user is admin
+	public String deleteGame(@PathVariable("id") Long gameId, Model model,
+			@CurrentSecurityContext(expression = "authentication?.name") String username) {
+		// check if game is published by current logged in user, or that current logged
+		// in user is admin
 		User user = urepository.findByUsername(username);
 		String role = user.getRole();
 		Game g = grepository.findByGameId(gameId);
-		
+
 		if (role.equals("ADMIN") || g.getPublisher() == user) {
 			model.addAttribute("game", grepository.findByGameId(gameId));
 			model.addAttribute("categories", crepository.findAll());
@@ -251,7 +270,8 @@ public class GameSiteController {
 	}
 
 	@PostMapping(value = "/account/delete")
-	public String deleteGame(@RequestParam(name = "gameId") Long gameId, Game game, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+	public String deleteGame(@RequestParam(name = "gameId") Long gameId, Game game,
+			@CurrentSecurityContext(expression = "authentication?.name") String username) {
 		User user = urepository.findByUsername(username);
 		String role = user.getRole();
 		Game g = grepository.findByGameId(gameId);
