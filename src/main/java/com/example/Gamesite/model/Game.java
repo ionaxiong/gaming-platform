@@ -10,10 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Game {
@@ -28,6 +27,7 @@ public class Game {
 	@Column(name = "game_url", nullable = false)
 	private String game_url;
 	
+	@Column(nullable = true, length = 64)
 	private String image_url;
 	
 	@ManyToOne
@@ -114,6 +114,14 @@ public class Game {
 
 	public void setPublisher(User publisher) {
 		this.userId = publisher;
+	}
+	
+	@Transient
+	public String getPhotosImagePath() {
+		if (image_url == null || gameId == null) { 
+			return "/game-photos/placeholder.png";
+		}
+		return "/game-photos/" + gameId + "/" + image_url;
 	}
 	
 	static public class SortByName implements Comparator<Game> {

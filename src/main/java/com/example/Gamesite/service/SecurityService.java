@@ -1,5 +1,6 @@
 package com.example.Gamesite.service;
 
+//provide current logged-in user and auto-login user after registration
 public interface SecurityService {
 	boolean isAuthenticated();
 

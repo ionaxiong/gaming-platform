@@ -1,5 +1,6 @@
 package com.example.Gamesite.web;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Gamesite.model.Game;
 import com.example.Gamesite.model.Game.SortByName;
@@ -29,6 +32,7 @@ import com.example.Gamesite.repository.UserGameScoreRepository;
 import com.example.Gamesite.repository.UserRepository;
 import com.example.Gamesite.service.SecurityService;
 import com.example.Gamesite.service.UserService;
+import com.example.Gamesite.util.FileUploadUtil;
 
 @Controller
 public class GameSiteController {
@@ -191,7 +195,7 @@ public class GameSiteController {
 		}
 	}
 
-	// public a new game
+	// public a new game, upload the game image
 	@RequestMapping(value = "/account/publish")
 	public String publish(Model model, Game game) {
 		model.addAttribute("game", new Game());
@@ -200,11 +204,15 @@ public class GameSiteController {
 	}
 
 	@RequestMapping(value = "/account/publish", method = RequestMethod.POST)
-	public String save(Game game) {
-		grepository.save(game);
+	public String save(Game game, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+		game.setImage_url(fileName);
+		Game savedGame = grepository.save(game);
+		String uploadDir = "game-photos/" + savedGame.getGameId();
+		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		return "redirect:/account";
 	}
-
+	
 	// edit a game
 	@GetMapping(value = "/account/edit/{id}")
 	public String editGame(@PathVariable("id") Long gameId, Model model,
@@ -228,20 +236,34 @@ public class GameSiteController {
 
 	@PostMapping(value = "/account/edit")
 	public String editGame(@RequestParam(name = "gameId") Long gameId, Game game,
-			@CurrentSecurityContext(expression = "authentication?.name") String username) {
+			@CurrentSecurityContext(expression = "authentication?.name") String username,
+			@RequestParam("image") MultipartFile multipartFile) throws IOException {
 		// check if game is published by current logged in user, or that current logged
 		// in user is admin
 		User user = urepository.findByUsername(username);
 		String role = user.getRole();
 		Game g = grepository.findByGameId(gameId);
 		if (role.equals("ADMIN") || g.getPublisher() == user) {
-			g.setCategory(game.getCategory());
-			g.setDescription(game.getDescription());
-			g.setGame_url(game.getGame_url());
-			g.setImage_url(game.getImage_url());
-			g.setName(game.getName());
-
-			grepository.save(g);
+			
+			if (multipartFile != null && !multipartFile.isEmpty()) {				
+				String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+				
+				g.setCategory(game.getCategory());
+				g.setDescription(game.getDescription());
+				g.setGame_url(game.getGame_url());
+				g.setImage_url(fileName);
+				g.setName(game.getName());
+				Game savedGame = grepository.save(g);
+				
+				String uploadDir = "game-photos/" + savedGame.getGameId();
+				FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+			} else  {
+				g.setCategory(game.getCategory());
+				g.setDescription(game.getDescription());
+				g.setGame_url(game.getGame_url());
+				g.setName(game.getName());
+				grepository.save(g);
+			}
 
 			return "redirect:/account";
 

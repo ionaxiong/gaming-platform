@@ -39,7 +39,7 @@
 	</nav>
 	<div class="container py-5">
 		<h5>Publish a game</h5>
-		<form th:object="${game}" th:action="@{~/account/publish}" action="#" method="POST">
+		<form th:object="${game}" enctype="multipart/form-data" th:action="@{~/account/publish}" action="#" method="POST">
 			
 			<div class="form-group-row my-3">
 				<label for="name" class="col-form-label">Name</label> <input
@@ -65,8 +65,8 @@
 			</div>
 			
 			<div class="form-group-row my-3">
-				<label for="image_url" class="col-form-label">Image URL</label> <input
-					type="text" class="form-control" id="image_url" th:field="*{image_url}">
+				<label for="image_url" class="col-form-label my-3">Photo</label> 
+				 <input type="file" name="image" accept="image/png, image/jpeg" />
 			</div>
 			<a href="/account" class="btn btn-secondary">Cancel</a>
 			<button type="submit" class="btn btn-success">Submit</button>
