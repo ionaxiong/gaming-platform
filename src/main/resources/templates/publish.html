@@ -65,8 +65,9 @@
 			</div>
 			
 			<div class="form-group-row my-3">
-				<label for="image_url" class="col-form-label my-3">Photo</label> 
-				 <input type="file" name="image" accept="image/png, image/jpeg" />
+				<label for="multipartfile" class="col-form-label my-3">Photo</label> 
+				 <input type="file" name="multipartfile" accept="image/png, image/jpeg" />
+				 <span class="has-error" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></span>
 			</div>
 			<a href="/account" class="btn btn-secondary">Cancel</a>
 			<button type="submit" class="btn btn-success">Submit</button>

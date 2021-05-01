@@ -64,11 +64,16 @@
 					type="text" class="form-control" id="game_url" th:field="*{game_url}">
 			</div>
 			
-			<img style="max-height: 200px; max-width: 300px; object-fit: cover;" class="card-img-top" 
+			<img style="max-height: 200px; max-width: 300px; object-fit: cover;" class="card-img-top" th:if="${game.getimage != null}"
+				th:src="@{'data:image/jpeg;base64,'+${game.photosImagePath}}" alt="Game image">
+				
+			<img style="max-height: 200px; max-width: 300px; object-fit: cover;" class="card-img-top" th:if="${game.getimage == null}"
 				th:src="${game.photosImagePath}" alt="Game image">
+				
 			<div class="form-group-row my-3">
-				<label for="image_url" class="col-form-label my-3">Photo</label> 
-				 <input type="file" name="image" accept="image/png, image/jpeg" />
+				<label for="multipartFile" class="col-form-label my-3">Photo</label> 
+				 <input type="file" name="multipartFile" accept="image/png, image/jpeg" />
+				 <span class="has-error" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></span>
 			</div>
 			
 			<input type="hidden" id="gameId" th:field="*{gameId}">

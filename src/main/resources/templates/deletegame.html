@@ -65,8 +65,12 @@
 			
 			<div class="form-group-row my-3">
 				<div class="row mx-0"><label for="image_url">Image</label></div>
+				
 				<img style="max-height: 200px; max-width: 300px; object-fit: cover;" class="card-img-top" 
-					id="image_url" th:src="${game.photosImagePath}" alt="Game image">
+					id="image_url" th:if="${game.getimage != null}" th:src="@{'data:image/jpeg;base64,'+${game.photosImagePath}}" alt="Game image">
+				
+				<img style="max-height: 200px; max-width: 300px; object-fit: cover;" class="card-img-top" 
+					id="image_url" th:if="${game.getimage == null}" th:src="${game.photosImagePath}" alt="Game image">
 			</div>
 			
 			<input type="hidden" id="gameId" th:field="*{gameId}">

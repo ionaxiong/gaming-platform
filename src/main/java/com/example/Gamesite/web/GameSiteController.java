@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Gamesite.model.FileEntity;
 import com.example.Gamesite.model.Game;
 import com.example.Gamesite.model.Game.SortByDate;
 import com.example.Gamesite.model.Game.SortByName;
@@ -32,13 +33,17 @@ import com.example.Gamesite.repository.FileRepository;
 import com.example.Gamesite.repository.GameRepository;
 import com.example.Gamesite.repository.UserGameScoreRepository;
 import com.example.Gamesite.repository.UserRepository;
+import com.example.Gamesite.service.FileService;
 import com.example.Gamesite.service.SecurityService;
 import com.example.Gamesite.service.UserService;
 
 @Controller
 public class GameSiteController {
 	@Autowired
-	private FileRepository frepository;
+	private FileService fileService;
+	
+	@Autowired
+	private FileValidator fileValidator;
 	
 	@Autowired
 	private GameRepository grepository;
@@ -60,7 +65,7 @@ public class GameSiteController {
 
 	@Autowired
 	private UserValidator userValidator;
-
+	
 	// registration and authentication
 	@GetMapping("/registration")
 	public String registration(Model model) {
@@ -163,7 +168,6 @@ public class GameSiteController {
 		} else {
 			return "/login";
 		}
-
 	}
 
 	// updating username
@@ -219,28 +223,36 @@ public class GameSiteController {
 
 	// public a new game, upload the game image
 	@RequestMapping(value = "/account/publish")
-	public String publish(Model model, Game game) {
+	public String publish(Model model, Game game, @CurrentSecurityContext(expression = "authentication?.name") String username) {
 		model.addAttribute("game", new Game());
 		model.addAttribute("categories", crepository.findAll());
 		return "publish";
 	}
 
 	@RequestMapping(value = "/account/publish", method = RequestMethod.POST)
-	public String save(Game game, @RequestParam("image") MultipartFile multipartFile) throws IOException {
-		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-		game.setImage_url(fileName);
-		Game savedGame = grepository.save(game);
-		String uploadDir = "game-photos/" + savedGame.getGameId();
-//		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-		return "redirect:/account";
+	public String save(Game game, @CurrentSecurityContext(expression = "authentication?.name") String username, BindingResult bindingResult, 
+			Model model, @RequestParam("multipartfile") MultipartFile multipartFile) throws IOException {
+		fileValidator.validate(multipartFile, bindingResult);
+		
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("categories", crepository.findAll());
+			return "publish";
+		} else {
+			if (multipartFile != null && !multipartFile.isEmpty()) {
+				FileEntity file = fileService.save(multipartFile);
+				game.setimage(file);
+			}
+			User publisher = urepository.findByUsername(username);
+			game.setPublisher(publisher);
+			grepository.save(game);
+			return "redirect:/account";
+		}
 	}
 
 	// edit a game
 	@GetMapping(value = "/account/edit/{id}")
-	public String editGame(@PathVariable("id") Long gameId, Model model,
-			@CurrentSecurityContext(expression = "authentication?.name") String username) {
-		// check if game is published by current logged in user, or that current logged
-		// in user is admin
+	public String editGame(@PathVariable("id") Long gameId, Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+		// check if game is published by current logged in user, or that current logged in user is admin
 		User user = urepository.findByUsername(username);
 		String role = user.getRole();
 		Game game = grepository.findByGameId(gameId);
@@ -253,39 +265,39 @@ public class GameSiteController {
 		} else {
 			return "login";
 		}
-
 	}
 
 	@PostMapping(value = "/account/edit")
-	public String editGame(@RequestParam(name = "gameId") Long gameId, Game game,
+	public String editGame(Model model, @RequestParam(name = "gameId") Long gameId, Game game,
 			@CurrentSecurityContext(expression = "authentication?.name") String username,
-			@RequestParam("image") MultipartFile multipartFile) throws IOException {
+			@RequestParam("multipartFile") MultipartFile multipartFile, BindingResult bindingResult) throws IOException {
 		// check if game is published by current logged in user, or that current logged
 		// in user is admin
+		fileValidator.validate(multipartFile, bindingResult);
+		
+		if(bindingResult.hasErrors()) {
+			game.setGameId(gameId);
+			model.addAttribute("game", game);
+			model.addAttribute("categories", crepository.findAll());
+			return "editgame";
+		}
+		
+		Game g = grepository.findByGameId(gameId);
 		User user = urepository.findByUsername(username);
 		String role = user.getRole();
-		Game g = grepository.findByGameId(gameId);
 		if (role.equals("ADMIN") || g.getPublisher() == user) {
 
 			if (multipartFile != null && !multipartFile.isEmpty()) {
-				String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-
-				g.setCategory(game.getCategory());
-				g.setDescription(game.getDescription());
-				g.setGame_url(game.getGame_url());
-				g.setImage_url(fileName);
-				g.setName(game.getName());
-				Game savedGame = grepository.save(g);
-
-				String uploadDir = "game-photos/" + savedGame.getGameId();
-//				FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-			} else {
-				g.setCategory(game.getCategory());
-				g.setDescription(game.getDescription());
-				g.setGame_url(game.getGame_url());
-				g.setName(game.getName());
-				grepository.save(g);
+				FileEntity file = fileService.save(multipartFile);
+				g.setimage(file);
 			}
+			
+			g.setPublisher(user);
+			g.setCategory(game.getCategory());
+			g.setDescription(game.getDescription());
+			g.setGame_url(game.getGame_url());
+			g.setName(game.getName());
+			grepository.save(g);
 
 			return "redirect:/account";
 
