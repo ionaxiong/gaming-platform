@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.Gamesite.model.Category;
 import com.example.Gamesite.model.Game;
 import com.example.Gamesite.model.Game.SortByDate;
 import com.example.Gamesite.model.Game.SortByName;
@@ -29,6 +28,7 @@ import com.example.Gamesite.model.User;
 import com.example.Gamesite.model.UserGameScore;
 import com.example.Gamesite.model.UserGameScore.SortByScore;
 import com.example.Gamesite.repository.CategoryRepository;
+import com.example.Gamesite.repository.FileRepository;
 import com.example.Gamesite.repository.GameRepository;
 import com.example.Gamesite.repository.UserGameScoreRepository;
 import com.example.Gamesite.repository.UserRepository;
@@ -37,6 +37,9 @@ import com.example.Gamesite.service.UserService;
 
 @Controller
 public class GameSiteController {
+	@Autowired
+	private FileRepository frepository;
+	
 	@Autowired
 	private GameRepository grepository;
 
@@ -106,17 +109,14 @@ public class GameSiteController {
 	@RequestMapping(value = { "/", "/gamelist" })
 	public String games(Model model, @RequestParam(required = false, name = "sortby") String sortBy, @RequestParam(required = false, name = "category") String category) {
 		// get url parameter
-		// if url parameter == name
 		List<Game> game = grepository.findAll();
 		
 		if (category != null) {
 			model.addAttribute("selectedCategory", category);
 			game = grepository.findByCategory(crepository.findByNameIgnoreCase(category.toLowerCase()));
 		} 
-//		else {
-//			model.addAttribute("selectedCategory", "none");
-//		}
 		
+		// if url parameter == name
 		if (sortBy != null) {
 			if (sortBy.equals("name")) {
 				game.sort(new SortByName());
@@ -145,8 +145,7 @@ public class GameSiteController {
 	// listing account details
 	@GetMapping(value = "/account")
 	public String account(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
-		// ADMIN is authorized to see a full list of games, USER can only see their own
-		// published games
+		// ADMIN is authorized to see a full list of games, USER can only see their own published games
 		User user = urepository.findByUsername(username);
 		String role = user.getRole();
 		if (role.equals("ADMIN")) {
