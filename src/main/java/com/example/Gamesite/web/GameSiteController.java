@@ -34,7 +34,6 @@ import com.example.Gamesite.repository.UserGameScoreRepository;
 import com.example.Gamesite.repository.UserRepository;
 import com.example.Gamesite.service.SecurityService;
 import com.example.Gamesite.service.UserService;
-import com.example.Gamesite.util.FileUploadUtil;
 
 @Controller
 public class GameSiteController {
@@ -233,7 +232,7 @@ public class GameSiteController {
 		game.setImage_url(fileName);
 		Game savedGame = grepository.save(game);
 		String uploadDir = "game-photos/" + savedGame.getGameId();
-		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+//		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		return "redirect:/account";
 	}
 
@@ -280,7 +279,7 @@ public class GameSiteController {
 				Game savedGame = grepository.save(g);
 
 				String uploadDir = "game-photos/" + savedGame.getGameId();
-				FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+//				FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 			} else {
 				g.setCategory(game.getCategory());
 				g.setDescription(game.getDescription());
