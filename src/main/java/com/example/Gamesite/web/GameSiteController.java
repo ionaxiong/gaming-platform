@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Gamesite.model.Category;
 import com.example.Gamesite.model.Game;
+import com.example.Gamesite.model.Game.SortByDate;
 import com.example.Gamesite.model.Game.SortByName;
 import com.example.Gamesite.model.User;
 import com.example.Gamesite.model.UserGameScore;
@@ -73,7 +75,7 @@ public class GameSiteController {
 	public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
 		userValidator.validate(userForm, bindingResult);
 		userForm.setRole("USER");
-		
+
 		if (bindingResult.hasErrors()) {
 			return "registration";
 		}
@@ -103,8 +105,28 @@ public class GameSiteController {
 
 	// displaying games - landing page
 	@RequestMapping(value = { "/", "/gamelist" })
-	public String games(Model model) {
-		model.addAttribute("games", grepository.findAll());
+	public String games(Model model, @RequestParam(required = false, name = "sortby") String sortBy, @RequestParam(required = false, name = "category") String category) {
+		// get url parameter
+		// if url parameter == name
+		List<Game> game = grepository.findAll();
+		
+		if (category != null) {
+			model.addAttribute("selectedCategory", category);
+			game = grepository.findByCategory(crepository.findByNameIgnoreCase(category.toLowerCase()));
+		} 
+//		else {
+//			model.addAttribute("selectedCategory", "none");
+//		}
+		
+		if (sortBy != null) {
+			if (sortBy.equals("name")) {
+				game.sort(new SortByName());
+			} else if (sortBy.equals("date")) {
+				game.sort(new SortByDate());
+			}
+		}
+		model.addAttribute("games", game);
+		model.addAttribute("categories", crepository.findAll());
 		return "gamelist";
 	}
 
@@ -154,18 +176,19 @@ public class GameSiteController {
 	}
 
 	@PostMapping(value = "/account/username")
-	public String saveUsername(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+	public String saveUsername(@ModelAttribute("userForm") User userForm, BindingResult bindingResult,
+			@CurrentSecurityContext(expression = "authentication?.name") String username) {
 		String newUsername = userForm.getUsername();
 		userValidator.validateUsername(userForm, bindingResult);
-		
+
 		if (bindingResult.hasErrors()) {
 			return "username";
-			
+
 		} else {
 			User U = urepository.findByUsername(username);
 			U.setUsername(newUsername);
 			urepository.save(U);
-			
+
 			return "redirect:/logout";
 		}
 	}
@@ -178,19 +201,20 @@ public class GameSiteController {
 	}
 
 	@PostMapping(value = "/account/password")
-	public String savePassword(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+	public String savePassword(@ModelAttribute("userForm") User userForm, BindingResult bindingResult,
+			@CurrentSecurityContext(expression = "authentication?.name") String username) {
 		BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 		String newPassword = bcrypt.encode(userForm.getPassword());
 		userValidator.validatePassword(userForm, bindingResult);
-		
+
 		if (bindingResult.hasErrors()) {
 			return "password";
-			
+
 		} else {
 			User U = urepository.findByUsername(username);
 			U.setPassword(newPassword);
 			urepository.save(U);
-			
+
 			return "redirect:/logout";
 		}
 	}
@@ -212,7 +236,7 @@ public class GameSiteController {
 		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		return "redirect:/account";
 	}
-	
+
 	// edit a game
 	@GetMapping(value = "/account/edit/{id}")
 	public String editGame(@PathVariable("id") Long gameId, Model model,
@@ -244,20 +268,20 @@ public class GameSiteController {
 		String role = user.getRole();
 		Game g = grepository.findByGameId(gameId);
 		if (role.equals("ADMIN") || g.getPublisher() == user) {
-			
-			if (multipartFile != null && !multipartFile.isEmpty()) {				
+
+			if (multipartFile != null && !multipartFile.isEmpty()) {
 				String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-				
+
 				g.setCategory(game.getCategory());
 				g.setDescription(game.getDescription());
 				g.setGame_url(game.getGame_url());
 				g.setImage_url(fileName);
 				g.setName(game.getName());
 				Game savedGame = grepository.save(g);
-				
+
 				String uploadDir = "game-photos/" + savedGame.getGameId();
 				FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-			} else  {
+			} else {
 				g.setCategory(game.getCategory());
 				g.setDescription(game.getDescription());
 				g.setGame_url(game.getGame_url());

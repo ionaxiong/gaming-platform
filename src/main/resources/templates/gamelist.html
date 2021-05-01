@@ -34,6 +34,24 @@
 	</nav>
 
 	<div class="container p-3">
+		<button th:if="${selectedCategory != null}"  class="btn btn-secondary btn-sm" type="button" onclick="filterByCategory('')">
+			All categories
+		</button>
+		<div class="row py-3">
+			<div class="pb-3 pl-3" th:each="category: ${categories}">
+			  <button th:classappend="${category.name == selectedCategory ? 'btn-primary' : 'btn-secondary'}" class="btn btn-sm" type="button" th:text="${category.name}" th:attr="onclick=|filterByCategory('${category.name}')|">
+			  </button>
+		  	</div>
+		</div>
+		<div class="dropdown pb-3">
+		  <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			Sort By
+		  </button>
+		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+		    <a class="dropdown-item" href="javascript:sortByName()">Name</a>
+		    <a class="dropdown-item" href="javascript:sortByDate()">Publish Date</a>
+		  </div>
+		</div>
 		<div class="row">
 			<div class="col-md-4 col-xs-6 pb-3" th:each="game: ${games}">
 				<div class="card">
@@ -44,12 +62,45 @@
 						<p class="card-text" th:text="${game.description}"></p>
 					</div>
 					<div class="card-footer">
+						<p class="card-text">
+							<small class="text-muted" >Published on: <span th:text="${game.dateToString}"></span> </small>
+						</p>
 						<a th:href="@{/play/{id}(id=${game.gameId})}" class="btn btn-primary">Play Now</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<script>
+		function sortByName() {
+			var url = new URL(window.location.href);
+	
+			url.searchParams.set('sortby', "name");
+			
+			window.location.replace(url.href);
+		}
+		
+		function sortByDate() {
+			var url = new URL(window.location.href);
+	
+			url.searchParams.set('sortby', "date");
+			
+			window.location.replace(url.href);
+		}	
+		
+		function filterByCategory(category) {
+			var url = new URL(window.location.href);
+		
+			if (category === "") {
+				url.searchParams.delete('category');
+			} else {
+				url.searchParams.set('category', category);
+			}
+			
+			window.location.replace(url.href);
+		}	
+		
+	</script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
 		crossorigin="anonymous"></script>

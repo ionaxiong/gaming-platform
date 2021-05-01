@@ -59,48 +59,32 @@ public class GamesiteApplication {
 			User admin = new User("admin", adminPassword, "admin@admin.com", "ADMIN");
 			urepository.save(admin);
 			
-			Game game1 = new Game("2048", "https://2048-iframe.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByName("Puzzle").get(0), "2048 is a single-player sliding tile puzzle video game. The objective of the game is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.", urepository.findByUsername("admin"));
+			Game game1 = new Game("2048", "https://2048-iframe.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByNameIgnoreCase("Puzzle"), "2048 is a single-player sliding tile puzzle video game. The objective of the game is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.", urepository.findByUsername("admin"));
 			grepository.save(game1);
 			
-			Game game2 = new Game("Clickermania", "https://clickermania-game.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByName("Casual").get(0), "Click mania allows you to gain as many scores as you can. You just need to click the circle to gain score, buy upgrades to automate clicking. A colorful and addictive game.", urepository.findByUsername("user"));
+			Game game2 = new Game("Clickermania", "https://clickermania-game.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByNameIgnoreCase("Casual"), "Click mania allows you to gain as many scores as you can. You just need to click the circle to gain score, buy upgrades to automate clicking. A colorful and addictive game.", urepository.findByUsername("user"));
 			grepository.save(game2);
 			
-			Game game3 = new Game("Flappy Bird", "", null, crepository.findByName("Arcade").get(0), "Flappy bird is an arcade-style game. The game is a side-scroller where the player controls a bird, which moves persistently to the right and attempt to fly between green pipes without hitting them.", urepository.findByUsername("admin"));
+			Game game3 = new Game("Flappy Bird", "", null, crepository.findByNameIgnoreCase("Arcade"), "Flappy bird is an arcade-style game. The game is a side-scroller where the player controls a bird, which moves persistently to the right and attempt to fly between green pipes without hitting them.", urepository.findByUsername("admin"));
 			grepository.save(game3);
 			
-			Game game4 = new Game("2048", "http://2048-iframe.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByName("Puzzle").get(0), "2048 is a single-player sliding tile puzzle video game. The objective of the game is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.", urepository.findByUsername("admin"));
+			Game game4 = new Game("2048", "http://2048-iframe.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByNameIgnoreCase("Puzzle"), "2048 is a single-player sliding tile puzzle video game. The objective of the game is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.", urepository.findByUsername("admin"));
 			grepository.save(game4);
 			
-			Game game5 = new Game("Clickermania", "http://clickermania-game.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByName("Casual").get(0), "Click mania allows you to gain as many scores as you can. You just need to click the circle to gain score, buy upgrades to automate clicking. A colorful and addictive game.", urepository.findByUsername("admin"));
+			Game game5 = new Game("Clickermania", "http://clickermania-game.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByNameIgnoreCase("Casual"), "Click mania allows you to gain as many scores as you can. You just need to click the circle to gain score, buy upgrades to automate clicking. A colorful and addictive game.", urepository.findByUsername("admin"));
 			grepository.save(game5);
 			
-			Game game6 = new Game("Flappy Bird", "", null, crepository.findByName("Arcade").get(0), "Flappy bird is an arcade-style game. The game is a side-scroller where the player controls a bird, which moves persistently to the right and attempt to fly between green pipes without hitting them.", urepository.findByUsername("admin"));
+			Game game6 = new Game("Flappy Bird", "", null, crepository.findByNameIgnoreCase("Arcade"), "Flappy bird is an arcade-style game. The game is a side-scroller where the player controls a bird, which moves persistently to the right and attempt to fly between green pipes without hitting them.", urepository.findByUsername("admin"));
 			grepository.save(game6);
 			
-			Game game7 = new Game("2048", "https://2048-iframe.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByName("Puzzle").get(0), "2048 is a single-player sliding tile puzzle video game. The objective of the game is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.", urepository.findByUsername("user"));
+			Game game7 = new Game("2048", "https://2048-iframe.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByNameIgnoreCase("Puzzle"), "2048 is a single-player sliding tile puzzle video game. The objective of the game is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.", urepository.findByUsername("user"));
 			grepository.save(game7);
 			
-			Game game8 = new Game("Clickermania", "https://clickermania-game.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByName("Casual").get(0), "Click mania allows you to gain as many scores as you can. You just need to click the circle to gain score, buy upgrades to automate clicking. A colorful and addictive game.", urepository.findByUsername("admin"));
+			Game game8 = new Game("Clickermania", "https://clickermania-game.s3.eu-central-1.amazonaws.com/index.html", null, crepository.findByNameIgnoreCase("Casual"), "Click mania allows you to gain as many scores as you can. You just need to click the circle to gain score, buy upgrades to automate clicking. A colorful and addictive game.", urepository.findByUsername("admin"));
 			grepository.save(game8);
 			
-			Game game9 = new Game("Flappy Bird", "", null, crepository.findByName("Arcade").get(0), "Flappy bird is an arcade-style game. The game is a side-scroller where the player controls a bird, which moves persistently to the right and attempt to fly between green pipes without hitting them.", urepository.findByUsername("user"));
+			Game game9 = new Game("Flappy Bird", "", null, crepository.findByNameIgnoreCase("Arcade"), "Flappy bird is an arcade-style game. The game is a side-scroller where the player controls a bird, which moves persistently to the right and attempt to fly between green pipes without hitting them.", urepository.findByUsername("user"));
 			grepository.save(game9);
-			
-//			String user2Password = bcrypt.encode("user2");
-//			User user2 = new User("user2", user2Password, "user2@user.com", savedgame);
-//			urepository.save(user2);
-
-//			UserGameScore score = new UserGameScore(grepository.findByName("game1"), urepository.findByUsername("user"), 100000);
-//			srepository.save(score);
-			
-//			user1.setSavedGames(savedgame);
-//			urepository.save(user1);
-//			
-			
-//			log.info("fetch game details");
-//			for (Game game: grepository.findAll()) {
-//				log.info(game.toString());
-//			}
 		};
 	}
 

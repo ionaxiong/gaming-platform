@@ -1,10 +1,13 @@
 package com.example.Gamesite.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,8 +16,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Game {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -130,6 +135,22 @@ public class Game {
 		{
 			return a.name.compareTo(b.name);
 		}
+	}
+	
+	static public class SortByDate implements Comparator<Game> {
+		@Override
+		public int compare(Game a, Game b)
+		{
+			return b.pub_date.compareTo(a.pub_date);
+//			return b.pub_date() - a.pub_date();
+		}
+	}
+	
+	@Transient
+	public String dateToString() {
+		DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		String formattedDate = formatter.format(this.getPub_date());
+		return formattedDate;
 	}
 
 	@Override
