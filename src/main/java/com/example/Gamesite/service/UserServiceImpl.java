@@ -7,21 +7,19 @@ import org.springframework.stereotype.Service;
 import com.example.Gamesite.model.User;
 import com.example.Gamesite.repository.UserRepository;
 
+//Service for handling User entity
 @Service
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
-//	@Autowired
-//	private RoleRepository roleRepository;
-	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+	// Custom save with password encryption
 	@Override
 	public void save(User user) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-//		user.setRoles(new HashSet<>(roleRepository.findAll()));
 		userRepository.save(user);
 	}
 	

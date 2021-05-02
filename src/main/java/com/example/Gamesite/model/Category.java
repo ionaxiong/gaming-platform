@@ -4,12 +4,14 @@ import java.util.List;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+// Category is used to filter games in gamelist
 @Entity
 public class Category {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
+	// Unique category name so find by name returns only one
 	@Column(unique=true)
 	private String name;
 	

@@ -21,7 +21,7 @@ public class FileService {
 		this.fileRepository = fileRepository;
 	}
 
-	//saving uploaded files (transforming MultipartFile object into FileEntity), 
+	// Save uploaded file (transform MultipartFile object into FileEntity) 
 	public FileEntity save(MultipartFile file) throws IOException{
 		FileEntity fileEntity = new FileEntity();
 		fileEntity.setName(StringUtils.cleanPath(file.getOriginalFilename()));
@@ -32,12 +32,12 @@ public class FileService {
 		return fileRepository.save(fileEntity);
 	}
 	
-	//uploading a single file by provided id
+	// get a single file by provided id
 	public Optional<FileEntity> getFile(String id) {
 		return fileRepository.findById(id);
 	}
 	
-	//return a list of uploaded files
+	// return a list of uploaded files
 	public List<FileEntity> getAllFiles(){
 		return fileRepository.findAll();
 	}

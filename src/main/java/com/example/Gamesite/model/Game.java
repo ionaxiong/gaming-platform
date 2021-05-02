@@ -17,10 +17,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
-import org.apache.commons.codec.binary.Base64;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+// Game is used to store data about a game, such as name and the URL of the game
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Game {
@@ -32,13 +33,16 @@ public class Game {
 	@Column(name = "name", nullable = false)
 	private String name;
 
+	// The URL the game is hosted at
 	@Column(name = "game_url", nullable = false)
 	private String game_url;
 
+	// The image of the game is in the database as a FileEntity
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "image", referencedColumnName = "id")
 	private FileEntity image;
 
+	// Many games can be used for one category
 	@ManyToOne
 	@JoinColumn(name = "category", nullable = false)
 	private Category category;
@@ -47,10 +51,11 @@ public class Game {
 	@CreatedDate
 	private Date pub_date;
 
+	// Publisher of the game, user can have many games published
 	@ManyToOne
 	@JoinColumn(name = "userId")
 	private User userId;
-
+	
 	public Game() {
 
 	}
@@ -128,17 +133,34 @@ public class Game {
 		this.userId = publisher;
 	}
 
+	// This is needed to show the images in HTML
 	@Transient
 	public String getPhotosImagePath() {
+		// If the game has no image in database, return a placeholder image URL
 		if (image == null || gameId == null) {
 			return "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg";
 		}
 
-		byte[] encode = java.util.Base64.getEncoder().encode(this.getimage().getData());
+		// If the game has a image, load the data from the database
+		byte[] imageData = this.getimage().getData();
+		
+		// To show the data in HTML, need to encode it to UTF_8
+		byte[] encode = java.util.Base64.getEncoder().encode(imageData);
 		String encodeToString = new String(encode, StandardCharsets.UTF_8);
+		
+		// Then return the encoded string
 		return encodeToString;
 	}
+	
+	// This is used in HTML to show formatted date
+	@Transient
+	public String dateToString() {
+		DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		String formattedDate = formatter.format(this.getPub_date());
+		return formattedDate;
+	}
 
+	// Sort by name in gamelist
 	static public class SortByName implements Comparator<Game> {
 		@Override
 		public int compare(Game a, Game b) {
@@ -146,18 +168,12 @@ public class Game {
 		}
 	}
 
+	// Sort by date in gamelist
 	static public class SortByDate implements Comparator<Game> {
 		@Override
 		public int compare(Game a, Game b) {
 			return b.pub_date.compareTo(a.pub_date);
 		}
-	}
-
-	@Transient
-	public String dateToString() {
-		DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		String formattedDate = formatter.format(this.getPub_date());
-		return formattedDate;
 	}
 
 	@Override

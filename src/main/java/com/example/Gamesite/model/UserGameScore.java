@@ -10,17 +10,22 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+// UserGameScore is used to save score in games for users
+// There can only be one score per game per user
+// If a better score is achieved, overwrite the old score 
 @Entity
 public class UserGameScore {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long userGameScoreId;
 	
-	@ManyToOne()
+	// One game can have many scores
+	@ManyToOne
 	@JoinColumn(name="gameId")
 	private Game gameId;
 
-	@ManyToOne()
+	// One user can have many scores
+	@ManyToOne
 	@JoinColumn(name="userId")
 	private User userId;
 	
@@ -76,6 +81,7 @@ public class UserGameScore {
 		this.date = date;
 	}
 
+	// Sort used in leader board, sorts biggest to smallest
 	static public class SortByScore implements Comparator<UserGameScore> {
 		@Override
 		public int compare(UserGameScore a, UserGameScore b)
@@ -87,8 +93,8 @@ public class UserGameScore {
 	@Override
 	public String toString() {
 		return "UserGameScore [\n\tuserGameScoreId=" + userGameScoreId + 
-				", \n\tgame.id=" + gameId + 
-				", \n\tuser.name=" + userId +
+				", \n\tgameid=" + gameId + 
+				", \n\tusername=" + userId +
 				", \n\tscore=" + score + "]";
 	}
 }

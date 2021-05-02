@@ -21,32 +21,39 @@ import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	// UserDetailService is used to configure the password generation encoding
 	@Qualifier("userDetailsServiceImpl")
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
-//	@Autowired
-//	private DataSource dataSource;
-	
+	// springSecurityDialect is used to access login information in html templates
 	@Bean
 	public SpringSecurityDialect springSecurityDialect() {
 		return new SpringSecurityDialect();
 	}
 	
+	// bCryptPasswordEncoder is the default encoding of passwords
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 	
+	// configure the password encoding to use bCryptPasswordEncoder
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
 	 
+	// configure network security
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+
+			// Disable CSRF to enable saving scores from javascript
 			.csrf().disable()
+			
+			// Allow iframe to load from anywhere
 			.headers().addHeaderWriter(new StaticHeadersWriter(
 			        "X-Content-Security-Policy",
 			        "frame-ancestors self *"))
@@ -55,35 +62,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			        "Content-Security-Policy",
 			        "frame-ancestors self *"))
 			.and()
+			
+			// Set which pages can be accessed without logging in
 			.authorizeRequests()
 				.antMatchers("/css/**", "/js/**", "/registration", "/gamelist/**", "/play/**", "/", "/game-photos/**").permitAll()
 				.anyRequest().authenticated()
 				.and()
+				
+			// Configure login
 			.formLogin()
 				.loginPage("/login")
 				.permitAll()
 				.and()
+				
+			// Configure logout
 			.logout()
 				.permitAll().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/");
 	}
 	
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-	  super.configure(web);
-	  web.httpFirewall(allowUrlEncodedSlashHttpFirewall());
-	}
-	
+	// AuthenticationManager required in SecurityServiceImpl
 	@Bean
 	public AuthenticationManager customAuthenticationManager() throws Exception {
 		return authenticationManager();
-	}
-	
-	@Bean
-	public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
-	    StrictHttpFirewall firewall = new StrictHttpFirewall();
-	    firewall.setAllowBackSlash(true);
-	    firewall.setAllowUrlEncodedDoubleSlash(true);
-	    firewall.setAllowUrlEncodedSlash(true);
-	    return firewall;
 	}
 }

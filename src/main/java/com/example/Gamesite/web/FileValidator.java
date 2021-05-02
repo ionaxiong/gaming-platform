@@ -13,16 +13,12 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+// FileValidator is used to validate files uploaded for game
 @Component
 public class FileValidator extends ResponseEntityExceptionHandler implements Validator {
 
+	// Allowed file types
     private static final List<String> contentTypes = Arrays.asList("image/png", "image/jpeg");
-    
-//    @ExceptionHandler(MaxUploadSizeExceededException.class)
-//    public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException exc) {
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                             .body("Unable to upload. File is too large!");
-//    }
     
 	@Override
 	public boolean supports(Class<?> aClass) {
@@ -33,10 +29,12 @@ public class FileValidator extends ResponseEntityExceptionHandler implements Val
 	public void validate(Object o, Errors errors) {
 		MultipartFile file = (MultipartFile) o;
 
-		// file validation
+		// Check that the file is not empty and is allowed type
 		if (!file.isEmpty() && !contentTypes.contains(file.getContentType())) {
 			errors.rejectValue("image", "Type.game.image");
 		}
+		
+		// Maximum size of file, 10 megabytes
         if (file.getSize() > 10 * 1024 * 1024) {
             errors.rejectValue("image", "Size.game.image");
         }

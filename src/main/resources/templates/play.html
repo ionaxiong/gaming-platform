@@ -75,6 +75,8 @@
     </table>
  
     <script th:inline="javascript">
+    
+    	// Function for receiving messages from iframe
         window.addEventListener("message", function(evt) {
             if (evt.data.messageType === "SCORE") {
                 submitScore(evt.data.score);
@@ -83,6 +85,7 @@
             }
         });
 
+    	// Function for sending message to server and showing information about score
         /*<![CDATA[*/
         function submitScore(score) {
             var gameId = ( /*[[${game.gameId}]]*/ "default" );

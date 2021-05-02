@@ -8,6 +8,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+// FileEntity is used to save files to the database
+// It is used to store JPG and PNG files
 @Entity
 @Table(name="files")
 public class FileEntity {
@@ -22,6 +24,7 @@ public class FileEntity {
 	
 	private Long size;
 	
+	// LOB is required for postgres to save large files
 	@Lob
 	private byte[] data;
 	

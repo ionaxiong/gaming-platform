@@ -24,6 +24,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+// User entity is used for basic login and personalization functionality
+// The table is named "profile" in the database because user is reserved by postgres 
 @Table(name="profile")
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -45,12 +47,16 @@ public class User {
     @Email(message = "Email should be valid")
     private String email;
     
+    // Used in registration form to make sure that user types password correctly
     @Transient
     private String passwordConfirm;
     
 	@CreatedDate
 	private Date join_date;
 	
+	// Role is either USER or ADMIN
+	// ADMIN can edit and delete other user's games
+	// USER can edit and delete only their own games
     @Column(name = "role", nullable = false)
     @ColumnDefault("USER")
     private String role;
@@ -123,32 +129,4 @@ public class User {
 		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
 				+ ", passwordConfirm=" + passwordConfirm + ", join_date=" + join_date + ", role=" + role + "]";
 	}
-
-//   @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        List<GrantedAuthority> listRole = new ArrayList<GrantedAuthority>();
-//
-//        listRole.add(new SimpleGrantedAuthority(role));
-//        return listRole;
-//    }
-//
-//	@Override
-//	public boolean isAccountNonExpired() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isAccountNonLocked() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isCredentialsNonExpired() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isEnabled() {
-//		return true;
-//	}
 }

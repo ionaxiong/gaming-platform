@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+// Security service is used to allow logged in users to access pages
 @Service
 public class SecurityServiceImpl implements SecurityService {
 	@Autowired
@@ -23,6 +24,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
+	// Restrict access based on logged in or not
 	public boolean isAuthenticated() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || AnonymousAuthenticationToken.class
@@ -32,6 +34,7 @@ public class SecurityServiceImpl implements SecurityService {
 		return authentication.isAuthenticated();
 	}
 	
+	// When registering, login automatically
 	@Override
 	public void autoLogin(String username, String password) {
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
